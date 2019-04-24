@@ -10,7 +10,6 @@ import math
 import matplotlib.pyplot as plt
 
 def lossfuncSqr(X,Xn):
-    #Xn = np.dot(Wn,Hn)
     m,n = X.shape
     sum = 0
     e = 0.0
@@ -21,7 +20,6 @@ def lossfuncSqr(X,Xn):
     return sum/e
     
 def lossfuncAbs(X,Xn):
-    #Xn = np.dot(Wn,Hn)
     m,n = X.shape
     sum = 0
     e = 0.0
@@ -43,12 +41,12 @@ def lossfuncD(X,Xn):
     return sum/e
     
 
-path = 'C:/Project/EDU/files/2013/example/Topic/60/'
+path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/'
 
-with open(path + 'X1test.txt') as file:
+with open(path + 'l.txt') as file:
     array1 = [[float(digit) for digit in line.split('\t')] for line in file]
 
-with open(path + 'X2test.txt') as file:
+with open(path + 'h.txt') as file:
     array2 = [[float(digit) for digit in line.split('\t')] for line in file]
 
 X1 = np.array(array1)
@@ -62,7 +60,7 @@ print (X2)
 epoc = 10
 a = 0.01
 
-k = 4
+k = 10
 
 kc = k / 2
 kd = k / 2
@@ -73,6 +71,9 @@ m,n2 = X2.shape
 W1 = np.random.rand(m,k)
 H1 = np.random.rand(n1,k)
 P = np.random.rand(m,m)
+
+W1 = W1/10.0
+H1 = H1/10.0
 
 print ('W1')
 print W1
@@ -86,8 +87,8 @@ H1t = np.transpose(H1)'''
 Pt = np.transpose(P)
 
 '''
-#W1 = W1/100.0
-#H1 = H1/100.0
+W1 = W1/100.0
+H1 = H1/100.0
 
 W1c = W1[:,:k/2]
 W1d = W1[:,k/2:]
@@ -123,6 +124,9 @@ print(H1d)
 
 W2 = np.random.rand(m,k)
 H2 = np.random.rand(n2,k)
+
+W2 = W2/10.0
+H2 = H2/10.0
 
 print ('W2')
 print W2
@@ -236,7 +240,7 @@ for e in range(epoc):
         
     W1cn = W1c - a * (
             - 2 * np.dot((X1 - np.dot(W1, H1t)), H1c ) 
-            #+ 2 * alpha * (W1c - W2c) 
+            + 2 * alpha * (W1c - W2c) 
             #+ 2 * gama * (np.dot((np.dot(P,W1c) + np.dot(Pt,W1c)), (reduce(np.dot, [W1ct,P,W1c] ) - reduce(np.dot, [W2ct,P,W2c] )))) 
             + 2 * W1c 
             )
@@ -244,21 +248,21 @@ for e in range(epoc):
     
     W2cn = W2c - a * (
             - 2 * np.dot((X2 - np.dot(W2, H2t)), H2c ) 
-            #- 2 * alpha * (W1c - W2c) 
+            - 2 * alpha * (W1c - W2c) 
             #- 2 * gama * (np.dot((np.dot(P,W2c) + np.dot(Pt,W2c)), (reduce(np.dot, [W1ct,P,W1c] ) - reduce(np.dot, [W2ct,P,W2c] )))) 
             + 2 * W2c 
             )
     
     W1dn = W1d - a * (
             - 2 * np.dot((X1 - np.dot(W1,H1t)), H1d )
-            #+ 2 * beta * np.dot(W2d, np.dot(W1dt, W2d))
+            + 2 * beta * np.dot(W2d, np.dot(W1dt, W2d))
             #+ 2 * gama * ( np.dot( ( np.dot(P,W1d) + np.dot(Pt,W1d) ), ( (reduce(np.dot, [W1dt, P, W1d] )) - (reduce(np.dot, [W2dt, P, W2d] ))) ) ) 
             + 2 * W1d
             )
     
     W2dn = W2d - a * (
             - 2 * np.dot((X2 - np.dot(W2,H2t)), H2d )
-            #+ 2 * beta * np.dot(W1d, np.dot(W1dt, W2d))
+            + 2 * beta * np.dot(W1d, np.dot(W1dt, W2d))
             #- 2 * gama * ( np.dot( ( np.dot(P,W1d) + np.dot(Pt,W1d) ), ( (reduce(np.dot, [W1dt, P, W1d] )) - (reduce(np.dot, [W2dt, P, W2d] ))))) 
             + 2 * W2d
             )

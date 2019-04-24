@@ -6,49 +6,106 @@ Created on Tue Feb 19 18:07:24 2019
 """
 
 import numpy as np
+from sklearn.cluster import KMeans
 
-X = np.array([
-    [5, 3, 0, 1],
-    [4, 0, 0, 1],
-    [1, 1, 0, 5],
-    [1, 0, 0, 4],
-    [0, 1, 5, 4],
-])
+def main():
+    print ('Start')
+    #print(test_sum_one())
+    copy()
 
-X = np.array([
-    [5, 3, 0, 1],
-    [4, 0, 0, 1],
-    [1, 1, 0, 5],
-    [1, 0, 0, 4],
-    [0, 1, 5, 4],
-])
+def test_sum():
+    x = np.array([[1,  2,   3],
+              [ 4,   5,  6],
+              [ 7,   8,  9]])
+    y = np.array([[3,  2,   1],
+              [ 6,   5,  4],
+              [ 9,   8,  7]])
+    
+    z = (x + y) / 2
+    print z
+    
+    w = np.hstack((x, y))
+    print w
+    
+    V = np.hstack(( (x + y) / 2 , np.hstack((x, y)) ))
+    print V
+    
+    kmeans = KMeans(n_clusters=2, random_state=0).fit(V)
+    
+    print(kmeans.labels_)
+    for l in kmeans.labels_:
+        print l
 
-A = np.array([
-    [5, 3, 0, 1],
-    [4, 0, 0, 1],
-    [1, 1, 0, 5],
-])
+def test_sum_one():
+    X = np.array([
+        [50, 30, 0, 10],
+        [40, 0, 0, 10],
+        [10, 10, 0, 50],
+        [10, 0, 0, 40],
+        [0, 10, 50, 40],
+    ])
+    
+    print X / X.max(axis = 0)
+    print X / X.sum(axis = 0)
+    return X / X.sum(axis = 0)
 
-print A.shape
+def copy():
+    x = np.array([[1000,  10,   0.5],
+              [ 765,   5,  0.35],
+              [ 800,   7,  0.09]])
+    X = np.array([
+        [50.0, 30.0, 0.0, 10.0],
+        [40.0, 0.0, 0.0, 10.0],
+        [10.0, 10.0, 0.0, 50.0],
+        [10.0, 0.0, 0.0, 40.0],
+        [0.0, 10.0, 50.0, 40.0],
+    ])
+    x = X
+    x_normed = x / x.max(axis=0)
+    print (x_normed)
+    x_normed1 = x / x.sum(axis=0)
+    print (x_normed1)
 
-B = np.array([
-    [5, 3, 0, 1 ,2],
-    [4, 0, 0, 1 ,3],
-    [1, 1, 0, 5 ,1],
-    [1, 0, 0, 4, 4],
-])
+def multiplying():
 
-#print B.shape
+    X = np.array([
+            [5, 3, 0, 1],
+            [4, 0, 0, 1],
+            [1, 1, 0, 5],
+            [1, 0, 0, 4],
+            [0, 1, 5, 4],
+            ])
 
-#print np.multiply(A,B)
-#print np.dot(A,B)
-#print A * B
+    X = np.array([
+        [5, 3, 0, 1],
+        [4, 0, 0, 1],
+        [1, 1, 0, 5],
+        [1, 0, 0, 4],
+        [0, 1, 5, 4],
+    ])
 
-wd = X[:,:2]
-print wd
-
-print X[:,2:]
-
-
-hc = X[:2,:]
-print hc
+    A = np.array([
+        [5, 3, 0, 1],
+        [4, 0, 0, 1],
+        [1, 1, 0, 5],
+    ])
+    
+    print A.shape
+    
+    B = np.array([
+        [5, 3, 0, 1 ,2],
+        [4, 0, 0, 1 ,3],
+        [1, 1, 0, 5 ,1],
+        [1, 0, 0, 4, 4],
+    ])    
+    
+    wd = X[:,:2]
+    print wd
+    
+    print X[:,2:]    
+    
+    hc = X[:2,:]
+    print hc
+    
+if __name__ == "__main__":
+    test_sum()

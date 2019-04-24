@@ -46,7 +46,7 @@ X = np.array([
 '''
     
 
-epoc = 100
+epoc = 50
 alpha = 0.01
 k = 2
 
@@ -73,7 +73,7 @@ errSqr = []
 errAbs = []
 
 for e in range(epoc):
-    alpha = 0.1/np.sqrt(e+1)
+    alpha = 0.01/np.sqrt(e+1)
 
     #Wn = W - alpha * ( reduce(np.dot, [W,np.transpose(H),H] ) - np.dot(X,H) + W )
     #Hn = H - alpha * ( reduce(np.dot, [H,np.transpose(W),W] ) - np.dot(np.transpose(X),W) + H )
