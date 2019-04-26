@@ -83,10 +83,12 @@ print (X2)
 epoc = 100
 #a = 0.01
 
-k = 10
+k = 20
 
 kc = k / 2
 kd = k / 2
+kc = 15
+kd = 15
 
 m,n1 = X1.shape
 m,n2 = X2.shape
@@ -145,7 +147,7 @@ for e in range(epoc):
     
     W1c =  W1[:,:kc]
     W1d =  W1[:,kd:]
-
+    
     H1c =  H1[:,:kc]
     H1d =  H1[:,kd:]
     
@@ -278,9 +280,19 @@ print (H2)
 Xn = np.dot(W2n, np.transpose(H2n))
 print (Xn)
 '''
+W1c =  W1[:,:kc]
+W1d =  W1[:,kd:]
+    
+W2c =  W2[:,:kc]
+W2d =  W2[:,kd:]
+    
+np.savetxt(path + "/k" + str(k) + "/c" + str(kc) + "d" + str(k-kd) + "/W1.csv", W1, delimiter=",")
+np.savetxt(path + "/k" + str(k) + "/c" + str(kc) + "d" + str(k-kd) + "/W2.csv", W2, delimiter=",")
 
-np.savetxt(path + "W1.csv", W1, delimiter=",")
-np.savetxt(path + "W2.csv", W2, delimiter=",")
+np.savetxt(path + "/k" + str(k) + "/c" + str(kc) + "d" + str(k-kd) + "/W1c.csv", W1c, delimiter=",")
+np.savetxt(path + "/k" + str(k) + "/c" + str(kc) + "d" + str(k-kd) + "/W2c.csv", W2c, delimiter=",")
+np.savetxt(path + "/k" + str(k) + "/c" + str(kc) + "d" + str(k-kd) + "/W1d.csv", W1d, delimiter=",")
+np.savetxt(path + "/k" + str(k) + "/c" + str(kc) + "d" + str(k-kd) + "/W2d.csv", W2d, delimiter=",")
 
 #print ('W1d')
 #print W1d

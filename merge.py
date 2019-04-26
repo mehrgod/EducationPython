@@ -5,11 +5,16 @@ Created on Mon Apr 22 18:18:15 2019
 @author: mirza
 """
 
+import os
 import numpy as np
 from sklearn.cluster import KMeans 
+from sklearn import metrics
+from sklearn.metrics import davies_bouldin_score
+import matplotlib.pyplot as plt
+#from sklearn.metrics import pairwise_distances
 
 def merge():
-    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/'
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/k20/c15d5/'
 
     with open(path + 'W1c.txt') as file:
         arrayW1c = [[float(digit) for digit in line.split('\t')] for line in file]
@@ -30,7 +35,7 @@ def merge():
 
     print W1c.shape
     
-    #V = np.hstack(( (W1c + W2c) / 2 , np.hstack((W1d, W2d)) ))
+    V = np.hstack(( (W1c + W2c) / 2 , np.hstack((W1d, W2d)) ))
     
     W1cW2c = (W1c + W2c) / 2
     np.savetxt(path + "W1cW2c.csv", W1cW2c, delimiter=",")
@@ -38,36 +43,82 @@ def merge():
     W1dW2d = np.hstack(( W1d, W2d ))
     np.savetxt(path + "W1dW2d.csv", W1dW2d, delimiter=",")
     
-    #np.savetxt(path + "vector.csv", V, delimiter=",")
-    
-def kmeans():
-    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/'
+    np.savetxt(path + "vector.csv", V, delimiter=",")
 
+def test_centroid():
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/'
     with open(path + 'vector.txt') as file:
         arrayV = [[float(digit) for digit in line.split('\t')] for line in file]
         
+    V = np.array(arrayV)
+    kmeans = KMeans(n_clusters = 5, random_state = 0).fit(V)
+    for c in kmeans.cluster_centers_:
+        print c
+    y_kmeans = kmeans.predict(V)
+    plt.scatter(V[:, 0], V[:, 1], c=y_kmeans, s=50, cmap='viridis')
+
+    centers = kmeans.cluster_centers_
+    plt.scatter(centers[:, 0], centers[:, 1], c='black', s=200, alpha=0.5);
+    
+def kmeans():
+    
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/'
+    
     ptrn = []
     with open(path + 'pattern.txt') as patterns:
         for p in patterns:
             ptrn.append(p.strip())
     
-    print ptrn
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/k20/c15d5/'
+
+    with open(path + 'vector.txt') as file:
+        arrayV = [[float(digit) for digit in line.split('\t')] for line in file]
+        
+    
+    clusters = 2
     
     V = np.array(arrayV)
-    kmeans = KMeans(n_clusters=3, random_state=0).fit(V)
+    kmeans = KMeans(n_clusters = clusters, random_state = 0).fit(V)
     
-    fw = open(path + "VectorCluster3.txt", "w")
-    '''
-    for l in kmeans.labels_:
-        print l
-        fw.write(str(l)+"\n")
-    '''
+    new_path = path + str(clusters)
+    
+    try:
+        os.mkdir(new_path)
+    except OSError:
+        print ("Directory %s already exists!" %new_path)
+    else:
+        print ("Successfully created the directory %s " %new_path)
+    
+    fw = open(new_path + "/VectorCluster" + str(clusters) +".txt", "w")
+    
     for i in range (len(kmeans.labels_)):
         print ptrn[i], kmeans.labels_[i]
         fw.write(ptrn[i] + "\t" + str(kmeans.labels_[i]) + "\n")
+    
+    fw_cent = open(new_path + "/VectorCenter" + str(clusters) +".txt", "w")
+        
+    for c in kmeans.cluster_centers_:
+        fw_cent.write(str(c) + "\n")
+        
+    fw_score = open(new_path + "/ClusteringScore" + str(clusters) +".txt", "w")
+    
+    labels = kmeans.labels_
+    print(metrics.silhouette_score(V, labels, metric='euclidean'))
+    print(metrics.calinski_harabaz_score(V, labels))
+    print(davies_bouldin_score(V, labels))
+    fw_score.write("Silhouette Score: " + str(metrics.silhouette_score(V, labels, metric='euclidean')) + "\n")
+    fw_score.write("Calinski Harabaz Score: " + str(metrics.calinski_harabaz_score(V, labels)) + "\n")
+    fw_score.write("Davies Bouldin Score: " + str(davies_bouldin_score(V, labels)))
+    
+    file.close()
+    fw.close()
+    fw_cent.close()
+    fw_score.close()
+    
     
 if __name__ == "__main__":
     print ('Start:')
     #merge()
     kmeans()
+    #test_centroid()
     print ('End')

@@ -8,11 +8,6 @@ Created on Tue Feb 19 18:07:24 2019
 import numpy as np
 from sklearn.cluster import KMeans
 
-def main():
-    print ('Start')
-    #print(test_sum_one())
-    copy()
-
 def test_sum():
     x = np.array([[1,  2,   3],
               [ 4,   5,  6],
@@ -35,6 +30,24 @@ def test_sum():
     print(kmeans.labels_)
     for l in kmeans.labels_:
         print l
+
+def test_divide():
+    X = np.array([
+        [50, 30, 0, 10, 40, 20],
+        [40, 0, 0, 10, 30, 50],
+        [10, 10, 0, 50, 10, 0],
+        [10, 0, 0, 40, 20, 20],
+        [0, 10, 50, 40, 30, 40],
+    ])
+    
+    a = X[:, 2:]
+    b = X[:, :2]
+    
+    print a.shape
+    print a
+    print b.shape
+    print b
+    
 
 def test_sum_one():
     X = np.array([
@@ -108,4 +121,5 @@ def multiplying():
     print hc
     
 if __name__ == "__main__":
-    test_sum()
+    #test_sum()
+    test_divide()
