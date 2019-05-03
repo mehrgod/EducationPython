@@ -13,6 +13,36 @@ from sklearn.metrics import davies_bouldin_score
 import matplotlib.pyplot as plt
 #from sklearn.metrics import pairwise_distances
 
+def merge_errors():
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040b/k22/"
+    errors = []
+    for x in os.listdir(path):
+        print x
+        pathn = path + x
+        with open(pathn + "/err.txt") as file:
+            array2d = [line for line in file]
+            errors.append(array2d[4])
+            #errors.append(float("{0:.8f}".format(array2d[4])))
+            
+    #err = np.array(errors)
+    
+    #np.savetxt(path + "/errs.txt", err, delimiter=",")
+    fw = open(path + "/errs.txt", "w")
+    for e in errors:
+        fw.write(e.strip()+",")
+    fw.close()
+            
+    
+
+def find_error():
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040b/k10/c2d8/"
+    with open(path + 'W1.csv') as file:
+        array2d = [[float(digit) for digit in line.split(',')] for line in file]
+        
+      
+    X = np.array(array2d)
+    return X
+
 def merge():
     path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/k20/c15d5/'
 
@@ -115,10 +145,36 @@ def kmeans():
     fw_cent.close()
     fw_score.close()
     
+def match_id():
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/'
+    
+    idlist = []
+    with open(path + 'IdLo.txt') as ids:
+        for i in ids:
+            idlist.append(i.strip())
+    
+    vecdict = {}
+    with open(path + 'VectorNormal1.txt') as vecs:
+        for line in vecs:
+            (key, val) = line.split("\t")
+            vecdict[key.strip()] = val.strip()
+    
+    for x in vecdict:
+        if x in idlist:
+            print x
+            
+    fw = open(path + "/VectorNormalLo.txt", "w")
+    for x in vecdict:
+        if x in idlist:
+            fw.write(x + "\t" + vecdict[x] + "\n")
+    
+    fw.close
     
 if __name__ == "__main__":
     print ('Start:')
     #merge()
-    kmeans()
+    #kmeans()
     #test_centroid()
+    #match_id()
+    merge_errors()
     print ('End')

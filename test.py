@@ -8,6 +8,15 @@ Created on Tue Feb 19 18:07:24 2019
 import numpy as np
 from sklearn.cluster import KMeans
 
+def test_csv():
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040b/k10/c2d8/"
+    with open(path + 'W1.csv') as file:
+        array2d = [[float(digit) for digit in line.split(',')] for line in file]
+        
+    X = np.array(array2d)
+    print X.shape
+    print X
+        
 def test_sum():
     x = np.array([[1,  2,   3],
               [ 4,   5,  6],
@@ -122,4 +131,5 @@ def multiplying():
     
 if __name__ == "__main__":
     #test_sum()
-    test_divide()
+    #test_divide()
+    test_csv()
