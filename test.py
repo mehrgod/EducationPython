@@ -8,6 +8,14 @@ Created on Tue Feb 19 18:07:24 2019
 import numpy as np
 from sklearn.cluster import KMeans
 
+def test_read_csv():
+    pathnn = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040b/k10/c2d8/"
+    
+    f1 = open(pathnn + "W1c.csv")
+    arrayW1c = [[float(digit) for digit in line.split(',')] for line in f1]
+    
+    print arrayW1c
+
 def test_sum_array():
     x = np.array([[1,  2,   3],
               [ 4,   5,  6],
@@ -155,4 +163,5 @@ if __name__ == "__main__":
     #test_divide()
     #test_csv()
     #test_stack()
-    test_sum_array()
+    #test_sum_array()
+    test_read_csv()

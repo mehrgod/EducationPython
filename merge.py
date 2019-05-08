@@ -12,7 +12,108 @@ from sklearn import metrics
 from sklearn.metrics import davies_bouldin_score
 import matplotlib.pyplot as plt
 import math
-#from sklearn.metrics import pairwise_distances
+
+def plot_error_c():
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040n/"
+    
+    f = open(path + "C-4to20.txt")
+    line = f.readlines()
+    
+    kkc = [token.strip() for token in line[0].split('\t')]
+    mean = [float(token.strip()) for token in line[1].split('\t')]
+    stdv = [float(token.strip()) for token in line[2].split('\t')]
+    
+    bar = []
+    for i in range(len(mean)):
+        bar.append(1.96 * float(stdv[i]) / math.sqrt(10))
+    
+    
+    plt.rcParams.update({'font.size': 14})
+    plt.figure()
+
+    fig, ax = plt.subplots(figsize=(20, 10))
+
+    plt.errorbar(kkc, mean, stdv, 
+                 #linestyle='None', 
+                 marker='+', 
+                 linewidth=3.0)
+
+    plt.legend(('X1','X2'))
+
+    plt.show()
+
+def merge_errors_c(k):
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040n/10/k" + str(k) + "/"
+    errorsX1 = []
+    for x in os.listdir(path):
+        if x.startswith("c") and ("c0" not in x):
+            print x
+            pathn = path + x
+            with open(pathn + "/errC.txt") as file:
+                for line in file:
+                    errorsX1.append(line)
+                
+    fw1 = open(path + "/errsC.txt", "w")
+    for e in errorsX1:
+        fw1.write(e.strip()+",")
+    
+    fw1.close()
+    
+def take_avg_c(value):
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040n/"
+    
+    error = []
+    
+    for iteration in range(1, 11):
+        pathn = path + str(iteration)
+        for k in os.listdir(pathn):
+            if k.startswith("k" + value):
+                pathnn = pathn + "/" + k
+                with open(pathnn + "/errsC.txt") as X1:
+                    for line in X1:
+                        error.append(line)
+                                
+    fw = open(path + 'k' + value + 'errC.txt', "w")
+    
+    for i in error:
+        fw.write(i + "\n")
+      
+    fw.close
+    
+def find_error_c():
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040n/10/"
+    for k in os.listdir(path):
+            if k.startswith("k"):
+                pathn = path + k + "/"
+                for l in os.listdir(pathn):
+                    if ((l.startswith("c")) and ("c0" not in l)):
+                        pathnn = pathn + l + "/"
+                        
+                        f1 = open(pathnn + "W1c.csv")
+                        arrayW1c = [[float(digit) for digit in line.split(',')] for line in f1]
+                        W1c = np.array(arrayW1c)
+                        
+                        f2 = open(pathnn + "W2c.csv")
+                        arrayW2c = [[float(digit) for digit in line.split(',')] for line in f2]
+                        W2c = np.array(arrayW2c)
+                                                
+                        X = W1c - W2c
+                        
+                        m,n = X.shape
+                        sum = 0
+                        e = 0.0
+                        for i in range(m):
+                            for j in range(n):
+                                sum += X[i,j]
+                                e += 1
+                        err = sum / e
+                        
+                        fw = open(pathnn + '/errC.txt', "w")
+                        fw.write(str(err))
+    
+    f1.close
+    f2.close
+    fw.close
 
 def plot_error():
     path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040n/"
@@ -287,11 +388,15 @@ if __name__ == "__main__":
     #test_centroid()
     #match_id()
     #take_avg()
-    plot_error()
-    #for i in range (10, 21, 2):
+    #plot_error()
+    #for i in range (4, 21, 2):
         #print i
-        #merge_errors(i)
+    #    merge_errors_c(i)
     #merge_errors(5)
-    #for i in range(10, 21, 2):
-    #    take_avg(str(i))
+    #for i in range(4, 21, 2):
+    #    take_avg_c(str(i))
+    #find_error_c()
+    #for i in range(4, 21, 2):
+    #take_avg_c(str(i))
+    plot_error_c()
     print ('End')
