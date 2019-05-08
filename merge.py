@@ -11,28 +11,138 @@ from sklearn.cluster import KMeans
 from sklearn import metrics
 from sklearn.metrics import davies_bouldin_score
 import matplotlib.pyplot as plt
+import math
 #from sklearn.metrics import pairwise_distances
 
-def merge_errors():
-    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040b/k22/"
-    errors = []
+def plot_error():
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040n/"
+    
+    f1 = open(path + "X1-4to20.txt")
+    line1 = f1.readlines()
+    
+    kkc1 = [token.strip() for token in line1[0].split('\t')]
+    mean1 = [float(token.strip()) for token in line1[1].split('\t')]
+    stdv1 = [float(token.strip()) for token in line1[2].split('\t')]
+    #number1 = [int(token.strip()) for token in line1[3].split('\t')]
+    
+    bar1 = []
+    for i in range(len(mean1)):
+        bar1.append(1.96 * float(stdv1[i]) / math.sqrt(10))
+    
+    f2 = open(path + "X2-4to20.txt")
+    line2 = f2.readlines()
+    
+    kkc2 = [token.strip() for token in line2[0].split('\t')]
+    mean2 = [float(token.strip()) for token in line2[1].split('\t')]
+    stdv2 = [float(token.strip()) for token in line2[2].split('\t')]
+    #number2 = [int(token.strip()) for token in line2[3].split('\t')]
+    
+    bar2 = []
+    for i in range(len(mean2)):
+        bar2.append(1.96 * float(stdv2[i]) / math.sqrt(10))
+    
+    
+    plt.rcParams.update({'font.size': 14})
+    plt.figure()
+
+    fig, ax = plt.subplots(figsize=(20, 10))
+
+    plt.errorbar(kkc1, mean1, stdv1, 
+                 #linestyle='None', 
+                 marker='+', 
+                 linewidth=3.0)
+
+    plt.errorbar(kkc2, mean2, stdv2, 
+                 #linestyle='None', 
+                 marker='^', 
+                 linewidth=3.0)
+
+    plt.legend(('X1','X2'))
+
+    plt.show()
+    
+
+
+def take_avg(value):
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040n/"
+    
+    errorX1 = []
+    errorX2 = []
+    errorX1X2 = []
+    
+    #k
+    #value = "4"
+    
+    for iteration in range(1, 11):
+        pathn = path + str(iteration)
+        for k in os.listdir(pathn):
+            if k.startswith("k" + value):
+                pathnn = pathn + "/" + k
+                        
+                with open(pathnn + "/errsX1.txt") as X1:
+                    for line in X1:
+                        errorX1.append(line)
+                
+                with open(pathnn + "/errsX2.txt") as X2:
+                    for line in X2:
+                        errorX2.append(line)
+                
+                with open(pathnn + "/errsX1X2.txt") as X1X2:
+                    for line in X1X2:
+                        errorX1X2.append(line)
+    
+    fw1 = open(path + 'k' + value + 'errX1.txt', "w")
+    fw2 = open(path + 'k' + value + 'errX2.txt', "w")
+    fw12 = open(path + 'k' + value + 'errX1X2.txt', "w")
+    
+    for i in errorX1:
+        fw1.write(i + "\n")
+    
+    for i in errorX2:
+        fw2.write(i + "\n")
+    
+    for i in errorX1X2:
+        fw12.write(i + "\n")
+        
+    fw1.close
+    fw2.close
+    fw12.close
+    
+
+def merge_errors(k):
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040n/10/k" + str(k) + "/"
+    errorsX1 = []
+    errorsX2 = []
+    errorsX1X2 = []
     for x in os.listdir(path):
-        print x
-        pathn = path + x
-        with open(pathn + "/err.txt") as file:
-            array2d = [line for line in file]
-            errors.append(array2d[4])
-            #errors.append(float("{0:.8f}".format(array2d[4])))
+        if x.startswith("c"):
+            print x
+            pathn = path + x
+            with open(pathn + "/err.txt") as file:
+                array2d = [line for line in file]
+                errorsX1.append(array2d[1])
+                errorsX2.append(array2d[3])
+                errorsX1X2.append(array2d[4])
+                #errors.append(float("{0:.8f}".format(array2d[4])))
             
     #err = np.array(errors)
     
     #np.savetxt(path + "/errs.txt", err, delimiter=",")
-    fw = open(path + "/errs.txt", "w")
-    for e in errors:
-        fw.write(e.strip()+",")
-    fw.close()
-            
+    fw1 = open(path + "/errsX1.txt", "w")
+    for e in errorsX1:
+        fw1.write(e.strip()+",")
     
+    fw2 = open(path + "/errsX2.txt", "w")
+    for e in errorsX2:
+        fw2.write(e.strip()+",")
+    
+    fw12 = open(path + "/errsX1X2.txt", "w")
+    for e in errorsX1X2:
+        fw12.write(e.strip()+",")
+    
+    fw1.close()
+    fw2.close()
+    fw12.close()
 
 def find_error():
     path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040b/k10/c2d8/"
@@ -176,5 +286,12 @@ if __name__ == "__main__":
     #kmeans()
     #test_centroid()
     #match_id()
-    merge_errors()
+    #take_avg()
+    plot_error()
+    #for i in range (10, 21, 2):
+        #print i
+        #merge_errors(i)
+    #merge_errors(5)
+    #for i in range(10, 21, 2):
+    #    take_avg(str(i))
     print ('End')

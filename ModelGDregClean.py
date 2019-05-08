@@ -77,7 +77,7 @@ def normal_column(X):
     return X / X.sum(axis = 0)
 
 def main(k, kc):
-    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040b/'
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040n/5/'
     
     with open(path + 'l.txt') as file:
         array1 = [[float(digit) for digit in line.split('\t')] for line in file]
@@ -247,17 +247,8 @@ def main(k, kc):
         W2n = np.concatenate((W2cn,W2dn),axis = 1)
         W2n = nonzero(W2n)
         #W2n = normal_column(W2n)
-        '''
-        print ('W1 New')
-        print W1n
-        print ('H1 New')
-        print H1n
-        
-        print ('W2 New')
-        print W2n
-        print ('H2 New')
-        print H2n
-        '''
+
+
         errorSqrX1 = lossfuncSqr(X1, np.dot(W1n,np.transpose(H1n)))
         errorAbsX1 = lossfuncAbs(X1, np.dot(W1n,np.transpose(H1n)))
         
@@ -265,16 +256,12 @@ def main(k, kc):
         errorAbsX2 = lossfuncAbs(X2, np.dot(W2n,np.transpose(H2n)))
         
         errorAbsX1X2 = lossBoth(X1, np.dot(W1n, np.transpose(H1n)), X2, np.dot(W2n,np.transpose(H2n)) )
-        
-        errorSqrC = lossfuncSqr(W1cn, W2cn)
-        
-        errorAbsC = lossfuncAbs(W1cn, W2cn)
+        #Remove for zero
+        #errorSqrC = lossfuncSqr(W1cn, W2cn)
+        #Remove for zero
+        #errorAbsC = lossfuncAbs(W1cn, W2cn)
         
         errorD = lossfuncD(np.transpose(W1dn), W2dn)
-        
-        #errorSqrP = lossfuncSqr(reduce(np.dot, [W1t, P, W1] ), reduce(np.dot, [W2t, P, W2]))
-        #errorAbsP = lossfuncAbs(reduce(np.dot, [W1t, P, W1] ), reduce(np.dot, [W2t, P, W2]))    
-        
         
         index.append(e)
         errSqrX1.append(errorSqrX1)
@@ -288,28 +275,11 @@ def main(k, kc):
         errSqrC.append(errorSqrC)
         errAbsC.append(errorAbsC)
         errD.append(errorD)
-        #errSqrP.append(errorSqrP)
-        #errAbsP.append(errorAbsP)
         
         W1 = W1n    
         W2 = W2n    
         H1 = H1n    
         H2 = H2n
-    ''' 
-    print ('Final W1')
-    print (W1)
-    print ('Final H1')
-    print (H1)
-    
-    print ('Final W2')
-    print (W2)
-    print ('Final H2')
-    print (H2)
-    '''
-    '''    
-    Xn = np.dot(W2n, np.transpose(H2n))
-    print (Xn)
-    '''
             
     W1c =  W1[:,:kc]
     W1d =  W1[:,kd:]
@@ -351,14 +321,6 @@ def main(k, kc):
     
     
     fw.close()
-    
-    #print ('W1d')
-    #print W1d
-    
-    #print ('W2d')
-    #print W2d
-    #print W1c
-    #print W2c
     
     plt.figure(1)
     plt.plot(index,errSqrX1)
@@ -413,6 +375,15 @@ def main(k, kc):
     plt.show
 
 if __name__ == "__main__":
-    for i in range(2,7):
+    for k in range(4,5,2):
+        print k
+        for i in range(0,1):
+        #for i in range(1,k-1):
+            main(k,i)
+    
+        '''
+    k = 10
+    for i in range(2,k-1):
         #print i
-        main(8,i)
+        main(k,i)
+        '''

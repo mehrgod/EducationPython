@@ -8,6 +8,27 @@ Created on Tue Feb 19 18:07:24 2019
 import numpy as np
 from sklearn.cluster import KMeans
 
+def test_sum_array():
+    x = np.array([[1,  2,   3],
+              [ 4,   5,  6],
+              [ 7,   8,  9]])
+    
+    y = np.array([[1,  2,   3]])
+    
+    z = np.zeros(3)
+    
+    print y + z
+
+def test_stack():
+    X = np.zeros(shape =(1,2))
+    X [0,0] = 1
+    X [0,1] = 2
+    Y = np.zeros(shape =(1,2))
+    Y [0,0] = 3
+    Y [0,1] = 4
+    Z = np.hstack((X,Y))
+    print Z
+
 def test_csv():
     path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040b/k10/c2d8/"
     with open(path + 'W1.csv') as file:
@@ -132,4 +153,6 @@ def multiplying():
 if __name__ == "__main__":
     #test_sum()
     #test_divide()
-    test_csv()
+    #test_csv()
+    #test_stack()
+    test_sum_array()
