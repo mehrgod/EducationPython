@@ -16,7 +16,7 @@ import math
 def plot_error_c():
     path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040n/"
     
-    f = open(path + "C-4to20.txt")
+    f = open(path + "C2-4to20.txt")
     line = f.readlines()
     
     kkc = [token.strip() for token in line[0].split('\t')]
@@ -49,11 +49,11 @@ def merge_errors_c(k):
         if x.startswith("c") and ("c0" not in x):
             print x
             pathn = path + x
-            with open(pathn + "/errC.txt") as file:
+            with open(pathn + "/errC2.txt") as file:
                 for line in file:
                     errorsX1.append(line)
                 
-    fw1 = open(path + "/errsC.txt", "w")
+    fw1 = open(path + "/errsC2.txt", "w")
     for e in errorsX1:
         fw1.write(e.strip()+",")
     
@@ -69,11 +69,11 @@ def take_avg_c(value):
         for k in os.listdir(pathn):
             if k.startswith("k" + value):
                 pathnn = pathn + "/" + k
-                with open(pathnn + "/errsC.txt") as X1:
+                with open(pathnn + "/errsC2.txt") as X1:
                     for line in X1:
                         error.append(line)
                                 
-    fw = open(path + 'k' + value + 'errC.txt', "w")
+    fw = open(path + 'k' + value + 'errC2.txt', "w")
     
     for i in error:
         fw.write(i + "\n")
@@ -97,7 +97,7 @@ def find_error_c():
                         arrayW2c = [[float(digit) for digit in line.split(',')] for line in f2]
                         W2c = np.array(arrayW2c)
                                                 
-                        X = W1c - W2c
+                        X = abs(W1c - W2c)
                         
                         m,n = X.shape
                         sum = 0
@@ -108,7 +108,7 @@ def find_error_c():
                                 e += 1
                         err = sum / e
                         
-                        fw = open(pathnn + '/errC.txt', "w")
+                        fw = open(pathnn + '/errC2.txt', "w")
                         fw.write(str(err))
     
     f1.close
@@ -397,6 +397,6 @@ if __name__ == "__main__":
     #    take_avg_c(str(i))
     #find_error_c()
     #for i in range(4, 21, 2):
-    #take_avg_c(str(i))
+    #    take_avg_c(str(i))
     plot_error_c()
     print ('End')
