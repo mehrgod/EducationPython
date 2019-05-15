@@ -11,6 +11,7 @@ from matplotlib import interactive
 interactive(True)
 
 #%matplotlib qt
+#%matplotlib inline
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')

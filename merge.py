@@ -12,11 +12,35 @@ from sklearn import metrics
 from sklearn.metrics import davies_bouldin_score
 import matplotlib.pyplot as plt
 import math
+    
+
+def plot_error_no_errorbar():
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/60402/"
+    
+    f1 = open(path + "Allplot.txt")
+    line1 = f1.readlines()
+    
+    kkc1 = [token.strip() for token in line1[0].split('\t')]
+    mean1 = [float(token.strip()) for token in line1[1].split('\t')]
+    
+    plt.rcParams.update({'font.size': 14})
+    plt.figure()
+
+    fig, ax = plt.subplots(figsize=(20, 10))
+
+    plt.errorbar(kkc1, mean1, 
+                 #linestyle='None', 
+                 marker='+', 
+                 linewidth=3.0)
+
+    plt.legend(('X1X2'))
+
+    plt.show()
 
 def plot_error_c():
     path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040n/"
     
-    f = open(path + "C2-4to20.txt")
+    f = open(path + "X1-4to20.txt")
     line = f.readlines()
     
     kkc = [token.strip() for token in line[0].split('\t')]
@@ -163,9 +187,8 @@ def plot_error():
     plt.show()
     
 
-
 def take_avg(value):
-    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040n/"
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040i/"
     
     errorX1 = []
     errorX2 = []
@@ -209,9 +232,126 @@ def take_avg(value):
     fw2.close
     fw12.close
     
+def take_avg_easy(value):
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/60402/"
+    
+    errorX1 = []
+    errorX2 = []
+    errorX1X2 = []
+    
+    #k
+    #value = "4"
+    
+    #for iteration in range(1, 11):
+        #pathn = path + str(iteration)
+    for k in os.listdir(path):
+        if k == "k" + str(value):
+            pathnn = path + k
+                        
+            with open(pathnn + "/errsX1.txt") as X1:
+                for line in X1:
+                    errorX1.append(line)
+                
+            with open(pathnn + "/errsX2.txt") as X2:
+                for line in X2:
+                    errorX2.append(line)
+                
+            with open(pathnn + "/errsX1X2.txt") as X1X2:
+                for line in X1X2:
+                    errorX1X2.append(line)
+    
+    
+    fw1 = open(path + 'k' + str(value) + 'errX1.txt', "w")
+    fw2 = open(path + 'k' + str(value) + 'errX2.txt', "w")
+    fw12 = open(path + 'k' + str(value) + 'errX1X2.txt', "w")
+    
+    #fwx = open(path + 'k' + str(value) + 'errX1X2Full.txt', "w")
+    
+    for i in errorX1:
+        fw1.write(i + "\n")
+        print i + "\n"
+    
+    for i in errorX2:
+        fw2.write(i + "\n")
+        print i + "\n"
+    
+    for i in errorX1X2:
+        fw12.write(i + "\n")
+        print i + "\n"
+    fw1.close
+    fw2.close
+    fw12.close
+
+def take_avg_agg():
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/60402/k"
+    
+    res = []
+    
+    for k in range(2,21):
+        fname = path + str(k) + "errX1X2.txt"
+        print fname
+        with open(fname) as f:
+            for line in f:
+                res.append(line.strip())
+                
+    print res
+    
+    fw = open(path + 'AllerrX1X2.txt', "w")
+    
+    for i in range (2,21):
+        for j in range(1,i):
+            print str(i) + "," + str(j)
+            fw.write (str(i) + "," + str(j) + "\t")
+    
+    fw.write("\n")
+    
+    for r in res:
+        fw.write(r)
+    
+    fw.close()
+    
+    '''
+    for k in os.listdir(path):
+        if k == "k" + str(value):
+            pathnn = path + k
+                        
+            with open(pathnn + "/errsX1.txt") as X1:
+                for line in X1:
+                    errorX1.append(line)
+                
+            with open(pathnn + "/errsX2.txt") as X2:
+                for line in X2:
+                    errorX2.append(line)
+                
+            with open(pathnn + "/errsX1X2.txt") as X1X2:
+                for line in X1X2:
+                    errorX1X2.append(line)
+    
+    
+    fw1 = open(path + 'k' + str(value) + 'errX1.txt', "w")
+    fw2 = open(path + 'k' + str(value) + 'errX2.txt', "w")
+    fw12 = open(path + 'k' + str(value) + 'errX1X2.txt', "w")
+    
+    fwx = open(path + 'k' + str(value) + 'errX1X2Full.txt', "w")
+    
+    for i in errorX1:
+        fw1.write(i + "\n")
+        print i + "\n"
+    
+    for i in errorX2:
+        fw2.write(i + "\n")
+        print i + "\n"
+    
+    for i in errorX1X2:
+        fw12.write(i + "\n")
+        print i + "\n"
+    fw1.close
+    fw2.close
+    fw12.close
+    '''
 
 def merge_errors(k):
-    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040n/10/k" + str(k) + "/"
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/60402/k" + str(k) + "/"
     errorsX1 = []
     errorsX2 = []
     errorsX1X2 = []
@@ -398,5 +538,10 @@ if __name__ == "__main__":
     #find_error_c()
     #for i in range(4, 21, 2):
     #    take_avg_c(str(i))
-    plot_error_c()
+    #plot_error_c()
+    #for i in range(2,21):
+    #    merge_errors(i)
+        #take_avg_easy(i)
+    #take_avg_agg()
+    #plot_error_no_errorbar()
     print ('End')

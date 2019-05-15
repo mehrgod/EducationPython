@@ -46,7 +46,7 @@ X = np.array([
 '''
     
 
-epoc = 50
+epoc = 100
 alpha = 0.01
 k = 2
 
@@ -59,6 +59,8 @@ H = np.random.rand(n,k)
 
 #W = W/100.0
 #H = H/100.0
+#W = W * 10.0
+#H = H * 10.0
 
 print W
 print H

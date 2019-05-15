@@ -6,7 +6,46 @@ Created on Tue Feb 19 18:07:24 2019
 """
 
 import numpy as np
+import math
 from sklearn.cluster import KMeans
+
+def test_auto():
+    a = np.array([1,2,3,4])
+    b = np.array([[-1,2],[3,4]])
+    #print a.mean()
+    b[b<0] = 0
+    print b
+
+def test_row():
+    for i in range (2,21):
+        for j in range(1,i):
+            print str(i) + "," + str(j)
+
+def test_pow():
+    print math.pow(6 - 3, 2)
+
+def make_rand():
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/test/"
+    n = np.random.rand(100,100)
+    n = n *100
+    a, b = n.shape
+    m = n
+    for i in range(a):
+        for j in range(b):
+            m[i,j] = int(n[i,j])
+    #print m
+    
+    n2 = np.random.rand(100,100)
+    n2 = n2 *100
+    a2, b2 = n2.shape
+    m2 = n2
+    for i in range(a2):
+        for j in range(b2):
+            m2[i,j] = int(n2[i,j])
+    #print m2
+    
+    np.savetxt(path + "/htest.csv", m, delimiter=",")
+    np.savetxt(path + "/ltest.csv", m2, delimiter=",")
 
 def test_read_csv():
     pathnn = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040b/k10/c2d8/"
@@ -164,4 +203,8 @@ if __name__ == "__main__":
     #test_csv()
     #test_stack()
     #test_sum_array()
-    test_read_csv()
+    #test_read_csv()
+    #make_rand()
+    #test_pow()
+    #test_row()
+    test_auto()

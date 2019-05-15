@@ -33,6 +33,9 @@ class MF():
         # Initialize user and item latent feature matrice
         self.P = np.random.normal(scale=1./self.K, size=(self.num_users, self.K))
         self.Q = np.random.normal(scale=1./self.K, size=(self.num_items, self.K))
+        
+        print self.P
+        print self.Q
 
         # Initialize the biases
         self.b_u = np.zeros(self.num_users)
@@ -113,15 +116,18 @@ R = np.array([
             
 
          
-path = 'C:/Project/EDU/files/2013/example/Topic/60/'
+path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/test/'
 
-with open(path + 'X1.txt') as file:
+with open(path + 'h.txt') as file:
     array2d = [[float(digit) for digit in line.split('\t')] for line in file]
 
 R = np.array(array2d)
 
+R = R / 100
 
-mf = MF(R, K=2, alpha=0.01, beta=0.01, iterations=100)
+print R
+
+mf = MF(R, K=20, alpha=0.1, beta=0.01, iterations=50)
 
 tp = mf.train()
 #index, err = training_process
