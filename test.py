@@ -8,11 +8,58 @@ Created on Tue Feb 19 18:07:24 2019
 import numpy as np
 import math
 from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+
+def test_plot():
+    X = [0.076735955479304,0.12107471428354363,0.15925099171396867,0.12117445698341163,0.15825396440460873,0.16551976695172887,0.15115833440529808,0.12975000378573398,0.15124189274020355,0.15876507845507717,0.14610753559819975,0.13430067074012042,0.12630876778360994,0.14173878577693938,0.12135526213786856,0.15310386171908613,0.14416107113263588,0.1421683239601366,0.13623913727189219,0.13899612212284504,0.12533236140227075,0.12800740495456878,0.12183144900467016,0.11682153035681135,0.12118286832735578,0.11998127152505512,0.11947487328137382,0.11850810984694396,0.11481165386753438,0.10757759056999501]
+    fig, ax = plt.subplots(figsize=(10, 5))
+    plt.plot(X, linewidth =2.0, color = 'red', ls='None', marker = '+')
+    plt.show
+
+def test_add_element():
+    X = np.array([[-1.0,  0.0,   3.0],
+              [ 4.0,   -5.0,  6.0],
+              [ 7.0,   -8.0,  9.0]])
+    
+    X[1,1] += 0.1
+    
+    print X
+    
+    X[0,0] -= 2 * 0.1
+    
+    print X
+    
+def test_forb():
+    X = np.array([[-1,  0,   3],
+              [ 4,   -5,  6],
+              [ 7,   -8,  9]])
+    
+    print np.dot(X, np.transpose(X)).flatten().sum()
+    print math.pow(10,-4)
+    print X[0,0]
+     
+    return np.linalg.norm(X, ord=None, axis=None, keepdims=False) ** 2
+
+def test_nonzero():
+    X = np.array([[-1,  0,   3],
+              [ 4,   -5,  6],
+              [ 7,   -8,  9]])
+    m, n = X.shape
+    Y = X
+    for i in range(m):
+        for j in range(n):
+            if (X[i,j] > 0):
+                Y[i,j] = X[i,j]
+            else:
+                Y[i,j] = 0
+    print Y
+    X[X<0] = 0
+    print X
 
 def test_auto():
     a = np.array([1,2,3,4])
     b = np.array([[-1,2],[3,4]])
-    #print a.mean()
+    print a.mean()
     b[b<0] = 0
     print b
 
@@ -207,4 +254,8 @@ if __name__ == "__main__":
     #make_rand()
     #test_pow()
     #test_row()
-    test_auto()
+    #test_auto()
+    #test_nonzero()
+    #print test_forb()
+    #test_add_element()
+    test_plot()

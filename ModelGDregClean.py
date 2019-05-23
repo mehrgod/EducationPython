@@ -15,6 +15,14 @@ mode = "test"
 
 path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/60402/'
 
+def grad(X, W, H):
+    G = - 2 * np.dot((X - np.dot(W, H1)), H1c ) + 2 * W1c
+    return G[0,0]
+
+def check(X):
+    G = (X[0,0] + math.pow(10,-4) - X[0,0] - math.pow(10,-4))/(2 * math.pow(10,-4))
+    return G
+
 def lossfuncSqr(X,Xn):
     m,n = X.shape
     sum = 0
@@ -238,19 +246,23 @@ def main(k, kc):
                 )
         
         H1n = H1 - a * (-2 * np.dot(np.transpose(X1 - np.dot(W1, H1t)), W1) + 2 * H1)
-        H1n = nonzero(H1n)
+        H1n[H1n<0] = 0
+        #H1n = nonzero(H1n)
         #H1n = normal_column(H1n)
         
         H2n = H2 - a * (-2 * np.dot(np.transpose(X2 - np.dot(W2, H2t)), W2) + 2 * H2)
-        H2n = nonzero(H2n)
+        H2n[H2n<0] = 0
+        #H2n = nonzero(H2n)
         #H2n = normal_column(H2n)
         
         W1n = np.concatenate((W1cn,W1dn),axis = 1)
-        W1n = nonzero(W1n)
+        W1n[W1n<0] = 0
+        #W1n = nonzero(W1n)
         #W1n = normal_column(W1n)
         
         W2n = np.concatenate((W2cn,W2dn),axis = 1)
-        W2n = nonzero(W2n)
+        W2n[W2n<0] = 0
+        #W2n = nonzero(W2n)
         #W2n = normal_column(W2n)
 
 

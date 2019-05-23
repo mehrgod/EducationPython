@@ -53,8 +53,7 @@ def merge_error_nmf(k):
             fw.write(i + ",")
     
         fw.close()
-    
-        
+            
     
     err = []
     for i in range(1, k+1):

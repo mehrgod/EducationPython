@@ -30,9 +30,186 @@ def lossfuncAbs(X,Xn):
     return sum / e
 
 path = 'C:/Project/EDU/files/2013/example/Topic/60/'
-path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/test/'
+path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040s3/'
 
-def gd_new():
+def grad_check(X, W, H):
+    
+    eps = math.pow(10, -4)
+    Wtemp = W
+    Htemp = H
+
+    grad_W = 2 * np.dot((np.dot(W, H) - X), np.transpose(H)) + 2 * W
+    grad_H = 2 * np.dot(np.transpose(W), (np.dot(W, H) - X )) + 2 * H
+    
+    #Xt = np.transpose(X)
+    #Wt = np.transpose(W)
+    #Ht = np.transpose(H)
+    
+    #grad_W = 2 * (reduce(np.dot,[W,Ht,H]) - np.dot(X,H) + W )
+    #grad_H = 2 * (reduce(np.dot,[H,Wt,W]) - np.dot(Xt,W) + H )
+    
+    print ('W')
+    print grad_W[1,1]
+    
+    Wtemp[1,1] += eps
+    checkW1 = np.linalg.norm(X - np.dot(Wtemp, H), ord=None, axis=None, keepdims=False) ** 2 
+    + np.linalg.norm(Wtemp, ord=None, axis=None, keepdims=False) ** 2 
+    + np.linalg.norm(H, ord=None, axis=None, keepdims=False) ** 2
+    
+    Wtemp[1,1] -= 2 * eps
+    checkW2 = np.linalg.norm(X - np.dot(Wtemp, H), ord=None, axis=None, keepdims=False) ** 2 
+    + np.linalg.norm(Wtemp, ord=None, axis=None, keepdims=False) ** 2 
+    + np.linalg.norm(H, ord=None, axis=None, keepdims=False) ** 2
+    
+    print (checkW1 - checkW2)/(2 * eps)
+    
+    print ('H')
+    print grad_H[1,1]
+    
+    Htemp[1,1] += eps
+    checkH1 = np.linalg.norm(X - np.dot(W, Htemp), ord=None, axis=None, keepdims=False) ** 2 
+    + np.linalg.norm(W, ord=None, axis=None, keepdims=False) ** 2 
+    + np.linalg.norm(Htemp, ord=None, axis=None, keepdims=False) ** 2
+    
+    Htemp[1,1] -= 2 * eps
+    checkH2 = np.linalg.norm(X - np.dot(W, Htemp), ord=None, axis=None, keepdims=False) ** 2 
+    + np.linalg.norm(W, ord=None, axis=None, keepdims=False) ** 2 
+    + np.linalg.norm(Htemp, ord=None, axis=None, keepdims=False) ** 2
+    
+    print (checkH1 - checkH2)/(2 * eps)
+'''
+def grad_check_transpose(X, W, H):
+    
+    eps = math.pow(10, -4)
+    Wtemp = W
+    Htemp = H
+    
+    Xt = np.transpose(X)
+    Wt = np.transpose(W)
+    Ht = np.transpose(H)
+    
+    grad_W = 2 * (reduce(np.dot,[W,Ht,H]) - np.dot(X,H) + W )
+    grad_H = 2 * (reduce(np.dot,[H,Wt,W]) - np.dot(Xt,W) + H )
+    
+    print ('W')
+    print grad_W[1,1]
+    
+    Wtemp[1,1] += eps
+    checkW1 = np.linalg.norm(X - np.dot(Wtemp, H), ord=None, axis=None, keepdims=False) ** 2 
+    + np.linalg.norm(Wtemp, ord=None, axis=None, keepdims=False) ** 2 
+    + np.linalg.norm(H, ord=None, axis=None, keepdims=False) ** 2
+    
+    Wtemp[1,1] -= 2 * eps
+    checkW2 = np.linalg.norm(X - np.dot(Wtemp, H), ord=None, axis=None, keepdims=False) ** 2 
+    + np.linalg.norm(Wtemp, ord=None, axis=None, keepdims=False) ** 2 
+    + np.linalg.norm(H, ord=None, axis=None, keepdims=False) ** 2
+    
+    print (checkW1 - checkW2)/(2 * eps)
+    
+    print ('H')
+    print grad_H[1,1]
+    
+    Htemp[1,1] += eps
+    checkH1 = np.linalg.norm(X - np.dot(W, Htemp), ord=None, axis=None, keepdims=False) ** 2 
+    + np.linalg.norm(W, ord=None, axis=None, keepdims=False) ** 2 
+    + np.linalg.norm(Htemp, ord=None, axis=None, keepdims=False) ** 2
+    
+    Htemp[1,1] -= 2 * eps
+    checkH2 = np.linalg.norm(X - np.dot(W, Htemp), ord=None, axis=None, keepdims=False) ** 2 
+    + np.linalg.norm(W, ord=None, axis=None, keepdims=False) ** 2 
+    + np.linalg.norm(Htemp, ord=None, axis=None, keepdims=False) ** 2
+    
+    print (checkH1 - checkH2)/(2 * eps)
+'''
+'''
+def gd_new_transpose(k):
+    with open(path + 'h.txt') as file:
+        array2d = [[float(digit) for digit in line.split('\t')] for line in file]
+    
+    X = np.array(array2d)
+    
+    print ('X')
+    print X
+    
+    epoc = 100
+    beta = 1.0
+    
+    m,n = X.shape
+    
+    W = np.random.rand(m,k)
+    H = np.random.rand(n,k)
+    
+    index = []
+    errSqr = []
+    errAbs = []
+    
+    for e in range(epoc):
+        alpha = 0.001/np.sqrt(e+1)
+    
+        Wt = np.transpose(W)
+        Ht = np.transpose(H)
+        
+        grad_check_transpose(X, W, H)
+        
+        Wn = W - alpha * (
+                np.dot((np.dot(W, Ht) - X), H)  
+                + 2 * beta * W 
+                )
+        Hn = H - alpha * (
+                np.dot(Wt, (np.dot(W, Ht) - X ))
+                + 2 * beta * Ht
+                )
+
+        print ('---------------------------------------------------------')
+        
+        errorSqr = lossfuncSqr(X, np.dot(Wn, Hn))
+        errorAbs = lossfuncAbs(X, np.dot(Wn, Hn))
+        
+        #print errorSqr
+        #print errorAbs
+        
+        print "-----"
+
+        index.append(e)
+        
+        errSqr.append(errorSqr)
+        errAbs.append(errorAbs)
+
+        W = Wn
+        H = Hn
+        
+            
+        print('W')
+        print(W)
+        print('H')
+        print(H)
+        
+        print e
+        if (e % 10 == 0):
+            print e
+            
+    #err = lossfuncAbs(X, np.dot(W, H))
+    #pathk = path + str(k)
+    #fw = open(pathk + 'err.txt', "w")
+    #fw.write(str(err))
+    #fw.close()
+    
+    print ('Xn: ')
+    print np.dot(W,H)
+        
+    plt.figure(1)
+    plt.plot(index,errAbs)
+    plt.title('Absolute Error')
+    plt.xlabel('Iteration')
+    
+    plt.figure(2)
+    plt.plot(index,errSqr)
+    plt.title('Square Error')
+    plt.xlabel('Iteration')
+     
+    plt.show()
+'''    
+def gd_new(k):
     with open(path + 'h.txt') as file:
         array2d = [[float(digit) for digit in line.split('\t')] for line in file]
     
@@ -43,9 +220,8 @@ def gd_new():
     print ('X')
     print X
     
-    epoc = 100
-    k = 10
-    beta = 0.1
+    epoc = 1000
+    beta = 1.0
     
     m,n = X.shape
     
@@ -63,24 +239,36 @@ def gd_new():
     errAbs = []
     
     for e in range(epoc):
-        alpha = 0.001/np.sqrt(e+1)
+        alpha = 1.0/np.sqrt(e+1)
     
         Wt = np.transpose(W)
         Ht = np.transpose(H)
         
-        Wn = W - alpha * (
-                np.dot((np.dot(W, H) - X), Ht)  
-                + 2 * beta * W 
-                )    
-        Hn = H - alpha * (
-                np.dot(Wt, (np.dot(W, H) - X ))
-                + 2 * beta * H
-                )
+        #grad_check(X, W, H)
+        
+        grad_w = 2 * np.dot((np.dot(W, H) - X), Ht) 
+        + 2 * beta * W
+        
+        Wn = W - alpha * grad_w
+        
+        grad_h = 2 * np.dot(Wt, (np.dot(W, H) - X )) 
+        + 2 * beta * H
+        
+        Hn = H - alpha * grad_h
+        
+        Wn[Wn<0] = 0
+        Hn[Hn<0] = 0
 
-        print ('---------------------------------------------------------')
+        #print ('---------------------------------------------------------')
         
         errorSqr = lossfuncSqr(X, np.dot(Wn, Hn))
         errorAbs = lossfuncAbs(X, np.dot(Wn, Hn))
+        '''
+        print errorSqr
+        print errorAbs
+        
+        print "-----"
+        '''
 
         index.append(e)
         
@@ -89,7 +277,13 @@ def gd_new():
 
         W = Wn
         H = Hn
-    
+        '''
+        if e > 10:
+            if (errAbs[e] > errAbs[e-1]):
+                print "Stopped at " + str(e)
+                break
+        '''
+        '''    
         print('W')
         print(W)
         print('H')
@@ -98,9 +292,15 @@ def gd_new():
         print e
         if (e % 10 == 0):
             print e
-            
-    print ('Xn: ')
-    print np.dot(W,H)
+        '''    
+    err = lossfuncAbs(X, np.dot(W, H))
+    pathk = path + str(k)
+    fw = open(pathk + 'err.txt', "w")
+    fw.write(str(err))
+    fw.close()
+    
+    #print ('Xn: ')
+    #print np.dot(W,H)
         
     plt.figure(1)
     plt.plot(index,errAbs)
@@ -114,6 +314,25 @@ def gd_new():
      
     plt.show()
     
+def read_error(k):
+    index = []
+    err = []
+    for i in range(1, k+1):
+        index.append(i)
+        f = open(path + str(i) + "err.txt")
+        lines = f.readlines()
+        for l in lines:
+            err.append(float(l))
+     
+    fig, ax = plt.subplots(figsize=(10, 5))
+    
+    plt.plot(index,err,color = 'r',ls='None',marker = '.')
+    plt.show    
+        
+    fw = open(path + "err.txt", "w")
+    for e in err:
+        fw.write(str(e) + ",")
+    fw.close
 
 def gd():
 
@@ -163,6 +382,8 @@ def gd():
     errSqrX2 = []
     errAbsX2 = []
     
+    alpha = 0.01
+    
     for e in range(epoc):
         alpha = 0.1/np.sqrt(e+1)
     
@@ -174,12 +395,12 @@ def gd():
         
         W1n = W1 - alpha * (
                 - 2 * np.dot( (X1 - np.dot(W1, H1t)) , H1 ) 
-                + 2 * W1 
+                + 2 * alpha * W1 
                 )    
         H1n = H1 - alpha * (
                 #-2 * np.dot( np.transpose( X1 - np.dot(W1 , H1t) ), W1 ) 
                 - 2 * np.dot( W1t,( np.dot(W1, H1t) - X1 ) )
-                + 2 * H1 
+                + 2 * alpha * H1 
                 )
         '''
         W2n = W2 - alpha * (
@@ -254,4 +475,30 @@ def gd():
 
 
 if __name__ == "__main__":
-    gd_new()
+    
+    k = 30
+    '''
+    print ('K = 2')
+    gd_new(2)
+    print ('K = 6')
+    gd_new(6)
+    print ('K = 10')
+    gd_new(10)
+    print ('K = 14')
+    gd_new(14)
+    print ('K = 18')
+    gd_new(18)
+    print ('K = 22')
+    gd_new(22)
+    print ('K = 26')
+    gd_new(26)
+    '''
+    
+    
+    for i in range(1,k+1):
+        print ('K = ' + str(i))
+        gd_new(i)
+    read_error(k)
+    
+    #gd_new(10)
+    #gd_new_transpose(10)
