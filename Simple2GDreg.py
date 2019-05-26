@@ -30,7 +30,7 @@ def lossfuncAbs(X,Xn):
     return sum / e
 
 path = 'C:/Project/EDU/files/2013/example/Topic/60/'
-path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040s3/'
+path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040k10/'
 
 def grad_check(X, W, H):
     
@@ -208,7 +208,171 @@ def gd_new_transpose(k):
     plt.xlabel('Iteration')
      
     plt.show()
-'''    
+'''
+
+def gd_new_full(k):
+    
+    with open(path + 'l.txt') as file:
+        array2dX1 = [[float(digit) for digit in line.split('\t')] for line in file]
+    
+    X1 = np.array(array2dX1)
+    
+    with open(path + 'h.txt') as file:
+        array2dX2 = [[float(digit) for digit in line.split('\t')] for line in file]
+    
+    X2 = np.array(array2dX2)
+    
+    print ('X1')
+    print X1
+    
+    print ('X2')
+    print X2
+    
+    epoc = 1000
+    beta = 1.0
+    
+    m1,n1 = X1.shape
+    m2,n2 = X2.shape
+    
+    W1 = np.random.rand(m1,k)
+    H1 = np.random.rand(k,n1)
+    
+    W2 = np.random.rand(m2,k)
+    H2 = np.random.rand(k,n2)
+    
+    W1 = W1 / 10.0
+    H1 = H1 / 10.0
+    
+    W2 = W2 / 10.0
+    H2 = H2 / 10.0
+    
+    index = []
+    errSqrX1 = []
+    errAbsX1 = []
+    errSqrX2 = []
+    errAbsX2 = []
+    
+    for e in range(epoc):
+        alpha = 1.0/np.sqrt(e+1)
+    
+        W1t = np.transpose(W1)
+        H1t = np.transpose(H1)
+        
+        W2t = np.transpose(W2)
+        H2t = np.transpose(H2)
+                
+        grad_w1 = 2 * np.dot((np.dot(W1, H1) - X1), H1t) 
+        + 2 * beta * W1
+        
+        W1n = W1 - alpha * grad_w1
+        
+        grad_w2 = 2 * np.dot((np.dot(W2, H2) - X2), H2t) 
+        + 2 * beta * W2
+        
+        W2n = W2 - alpha * grad_w2
+        
+        grad_h1 = 2 * np.dot(W1t, (np.dot(W1, H1) - X1)) 
+        + 2 * beta * H1
+        
+        H1n = H1 - alpha * grad_h1
+        
+        grad_h2 = 2 * np.dot(W2t, (np.dot(W2, H2) - X2)) 
+        + 2 * beta * H2
+        
+        H2n = H2 - alpha * grad_h2
+        
+        W1n[W1n<0] = 0
+        H1n[H1n<0] = 0
+
+        W2n[W2n<0] = 0
+        H2n[H2n<0] = 0
+
+        #print ('---------------------------------------------------------')
+        
+        errorSqrX1 = lossfuncSqr(X1, np.dot(W1n, H1n))
+        errorAbsX1 = lossfuncAbs(X1, np.dot(W1n, H1n))
+        
+        errorSqrX2 = lossfuncSqr(X2, np.dot(W2n, H2n))
+        errorAbsX2 = lossfuncAbs(X2, np.dot(W2n, H2n))
+        '''
+        print errorSqrX1
+        print errorAbsX1
+        print errorSqrX2
+        print errorAbsX2
+        
+        print "-----"
+        '''
+
+        index.append(e)
+        
+        errSqrX1.append(errorSqrX1)
+        errAbsX1.append(errorAbsX1)
+
+        errSqrX2.append(errorSqrX2)
+        errAbsX2.append(errorAbsX2)
+
+        W1 = W1n
+        H1 = H1n
+        
+        W2 = W2n
+        H2 = H2n
+        
+        '''
+        if e > 10:
+            if (errAbs[e] > errAbs[e-1]):
+                print "Stopped at " + str(e)
+                break
+        '''
+        '''    
+        print('W')
+        print(W)
+        print('H')
+        print(H)
+        '''
+        #print e
+        if (e % 10 == 0):
+            print e
+    
+    pathk = path + str(k)
+    
+    err1 = lossfuncAbs(X1, np.dot(W1, H1))
+    fw1 = open(pathk + 'err1.txt', "w")
+    fw1.write(str(err1))
+    fw1.close()
+    
+    err2 = lossfuncAbs(X2, np.dot(W2, H2))
+    fw2 = open(pathk + 'err2.txt', "w")
+    fw2.write(str(err2))
+    fw2.close()
+    
+    np.savetxt(path + "/W1.csv", W1, delimiter=",")
+    np.savetxt(path + "/W2.csv", W2, delimiter=",")
+        
+    np.savetxt(path + "/H1.csv", H1, delimiter=",")
+    np.savetxt(path + "/H2.csv", H2, delimiter=",")
+        
+    plt.figure(1)
+    plt.plot(index,errAbsX1)
+    plt.title('Absolute Error X1')
+    plt.xlabel('Iteration')
+    
+    plt.figure(2)
+    plt.plot(index,errSqrX1)
+    plt.title('Square Error X1')
+    plt.xlabel('Iteration')
+     
+    plt.figure(3)
+    plt.plot(index,errAbsX2)
+    plt.title('Absolute Error X2')
+    plt.xlabel('Iteration')
+    
+    plt.figure(4)
+    plt.plot(index,errSqrX2)
+    plt.title('Square Error X2')
+    plt.xlabel('Iteration')
+     
+    plt.show()
+
 def gd_new(k):
     with open(path + 'h.txt') as file:
         array2d = [[float(digit) for digit in line.split('\t')] for line in file]
@@ -314,12 +478,12 @@ def gd_new(k):
      
     plt.show()
     
-def read_error(k):
+def read_error(k,n):
     index = []
     err = []
     for i in range(1, k+1):
         index.append(i)
-        f = open(path + str(i) + "err.txt")
+        f = open(path + str(i) + "err" + n + ".txt")
         lines = f.readlines()
         for l in lines:
             err.append(float(l))
@@ -329,10 +493,11 @@ def read_error(k):
     plt.plot(index,err,color = 'r',ls='None',marker = '.')
     plt.show    
         
-    fw = open(path + "err.txt", "w")
+    fw = open(path + "err" + n + ".txt", "w")
     for e in err:
         fw.write(str(e) + ",")
     fw.close
+    
 
 def gd():
 
@@ -457,7 +622,7 @@ def gd():
     plt.plot(index,errAbsX1)
     plt.title('Absolute Error X1')
     plt.xlabel('Iteration')
-    '''
+    
     plt.figure(3)
     plt.plot(index,errSqrX2)
     plt.title('Square Error X2')
@@ -467,7 +632,7 @@ def gd():
     plt.plot(index,errAbsX2)
     plt.title('Absolute Error X2')
     plt.xlabel('Iteration')
-    '''
+    
     plt.show
     
     np.savetxt(path + "W1.csv", W1, delimiter=",")
@@ -476,7 +641,7 @@ def gd():
 
 if __name__ == "__main__":
     
-    k = 30
+    
     '''
     print ('K = 2')
     gd_new(2)
@@ -493,12 +658,12 @@ if __name__ == "__main__":
     print ('K = 26')
     gd_new(26)
     '''
-    
-    
+    '''
+    k = 30
     for i in range(1,k+1):
         print ('K = ' + str(i))
-        gd_new(i)
-    read_error(k)
-    
-    #gd_new(10)
-    #gd_new_transpose(10)
+        gd_new_full(i)
+    read_error(k,"1")
+    read_error(k,"2")
+    '''
+    gd_new_full(10)

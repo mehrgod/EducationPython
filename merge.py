@@ -441,26 +441,26 @@ def test_centroid():
     centers = kmeans.cluster_centers_
     plt.scatter(centers[:, 0], centers[:, 1], c='black', s=200, alpha=0.5);
     
-def kmeans():
+def kmeans(clusters):
     
     path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/'
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040k10/'
     
     ptrn = []
     with open(path + 'pattern.txt') as patterns:
         for p in patterns:
             ptrn.append(p.strip())
     
-    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/k20/c15d5/'
+    #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/k20/c15d5/'
 
-    with open(path + 'vector.txt') as file:
-        arrayV = [[float(digit) for digit in line.split('\t')] for line in file]
-        
-    
-    clusters = 2
+    #with open(path + 'vector.txt') as f:
+    #    arrayV = [[float(digit) for digit in line.split('\t')] for line in f]
+    with open(path + 'W1W2.txt') as f:
+        arrayV = [[float(digit) for digit in line.split('\t')] for line in f]
     
     V = np.array(arrayV)
     kmeans = KMeans(n_clusters = clusters, random_state = 0).fit(V)
-    
+    '''
     new_path = path + str(clusters)
     
     try:
@@ -469,18 +469,21 @@ def kmeans():
         print ("Directory %s already exists!" %new_path)
     else:
         print ("Successfully created the directory %s " %new_path)
-    
-    fw = open(new_path + "/VectorCluster" + str(clusters) +".txt", "w")
+    '''
+    fw = open(path + "Cluster" + str(clusters) +".txt", "w")
+    fwc = open(path + str(clusters) +".txt", "w")
     
     for i in range (len(kmeans.labels_)):
         print ptrn[i], kmeans.labels_[i]
         fw.write(ptrn[i] + "\t" + str(kmeans.labels_[i]) + "\n")
-    
+        fwc.write(str(kmeans.labels_[i]) + "\n")
+    '''
     fw_cent = open(new_path + "/VectorCenter" + str(clusters) +".txt", "w")
         
     for c in kmeans.cluster_centers_:
         fw_cent.write(str(c) + "\n")
-        
+    '''    
+    '''
     fw_score = open(new_path + "/ClusteringScore" + str(clusters) +".txt", "w")
     
     labels = kmeans.labels_
@@ -490,11 +493,11 @@ def kmeans():
     fw_score.write("Silhouette Score: " + str(metrics.silhouette_score(V, labels, metric='euclidean')) + "\n")
     fw_score.write("Calinski Harabaz Score: " + str(metrics.calinski_harabaz_score(V, labels)) + "\n")
     fw_score.write("Davies Bouldin Score: " + str(davies_bouldin_score(V, labels)))
-    
-    file.close()
+    '''
+    f.close()
     fw.close()
-    fw_cent.close()
-    fw_score.close()
+    #fw_cent.close()
+    #fw_score.close()
     
 def match_id():
     path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/'
@@ -524,7 +527,8 @@ def match_id():
 if __name__ == "__main__":
     print ('Start:')
     #merge()
-    #kmeans()
+    for i in range(2,6):
+        kmeans(i)
     #test_centroid()
     #match_id()
     #take_avg()

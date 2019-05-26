@@ -416,5 +416,5 @@ if __name__ == "__main__":
         for i in range(1,k):
             main(k,i)
     '''      
-    main (2,1)
+    main (10,5)
     
