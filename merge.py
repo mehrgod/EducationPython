@@ -13,6 +13,65 @@ from sklearn.metrics import davies_bouldin_score
 import matplotlib.pyplot as plt
 import math
     
+def plot_all():
+        path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/"
+        
+        k = 30
+        
+        fname = path + 'k' + str(k) + '/' + str(k) + '.txt'
+        print fname
+        f = open(fname)
+        err = [line.strip() for line in f]
+        X = [float(token.strip()) for token in err[0].split(',')]
+        C = [float(token.strip()) for token in err[1].split(',')]
+        D = [float(token.strip()) for token in err[2].split(',')]
+        
+        index = []
+        for j in range(1,k):
+            index.append(j)
+        
+        plt.figure(1)
+        plt.plot(index,X)
+        #fig.savefig(path + "C1" + performance + ".pdf")
+        
+        plt.figure(2)
+        plt.plot(index,C)
+        #fig.savefig(path + "C1" + performance + ".pdf")
+        
+        plt.figure(3)
+        plt.plot(index,D)
+        #fig.savefig(path + "C1" + performance + ".pdf")
+
+        
+def merge_err():
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/"
+    
+    for k in range(2,31):
+        X = []
+        C = []
+        D = []
+        for kc in range(1,k):
+            fname = path + 'k' + str(k) + '/c' + str(kc) + 'd' + str(k-kc) + '/err.txt'
+            print fname
+            f = open(fname)
+            err = [line.strip() for line in f]
+            
+            print err
+            
+            X.append(err[4])
+            C.append(err[5])
+            D.append(err[6])
+        
+        x = ''
+        c = ''
+        d = ''
+        for i in range(len(X)):
+            x = x + ',' + X[i]
+            c = c + ',' + C[i]
+            d = d + ',' + D[i]
+        fw = open(path + 'k' + str(k) + '/' + str(k) + '.txt', "w")
+        fw.write(x[1:] + '\n' + c[1:] + '\n' + d[1:])
+        fw.close
 
 def plot_err():
     index = [1,2,3,4,5,6,7,8,9,10]
@@ -592,5 +651,7 @@ if __name__ == "__main__":
     #take_avg_agg()
     #plot_error_no_errorbar()
     #to_plot()
-    plot_err()
+    #plot_err()
+    #merge_err()
+    plot_all()
     print ('End')
