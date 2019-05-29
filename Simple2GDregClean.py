@@ -8,6 +8,12 @@ Created on Fri May 24 15:32:05 2019
 import numpy as np
 import math
 import matplotlib.pyplot as plt
+import os
+
+mode = ''
+#mode = 'write'
+
+path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/'
 
 def lossfuncSqr(X,Xn):
     m,n = X.shape
@@ -40,30 +46,29 @@ def lossfuncD(X,Xn):
             e += 1
     return sum/e
 
-path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040model/'
 
-def function(X1, W1, H1, X2, W2, H2, kc):
+def function(X1, W1, H1, X2, W2, H2, kc, alpha, beta, gama, reg):
     W1c = W1[:,:kc]
     W1d = W1[:,kc:]
     
     W2c = W2[:,:kc]
     W2d = W2[:,kc:]
-        
+    
     H1t = np.transpose(H1)
     H2t = np.transpose(H2)
     
-    v = np.linalg.norm(X1 - np.dot(W1, H1t), ord=None, axis=None, keepdims=False) ** 2
-    + np.linalg.norm(X2 - np.dot(W2, H2t), ord=None, axis=None, keepdims=False) ** 2
-    + np.linalg.norm(W1c - W2c, ord=None, axis=None, keepdims=False) ** 2
-    + np.linalg.norm(np.dot(np.transpose(W1d), W2d) , ord=None, axis=None, keepdims=False) ** 2
-    + np.linalg.norm(W1, ord=None, axis=None, keepdims=False) ** 2 
-    + np.linalg.norm(H1, ord=None, axis=None, keepdims=False) ** 2
-    + np.linalg.norm(W2, ord=None, axis=None, keepdims=False) ** 2 
-    + np.linalg.norm(H2, ord=None, axis=None, keepdims=False) ** 2
-    
+    v =  (gama * np.linalg.norm(X1 - np.dot(W1, H1t), ord=None, axis=None, keepdims=False) ** 2 
+    + gama * np.linalg.norm(X2 - np.dot(W2, H2t), ord=None, axis=None, keepdims=False) ** 2 
+    + alpha * np.linalg.norm(W1c - W2c, ord=None, axis=None, keepdims=False) ** 2 
+    + beta * np.linalg.norm(np.dot(np.transpose(W1d), W2d) , ord=None, axis=None, keepdims=False) ** 2 
+    + reg * np.linalg.norm(W1, ord=None, axis=None, keepdims=False) ** 2 
+    + reg * np.linalg.norm(H1, ord=None, axis=None, keepdims=False) ** 2 
+    + reg * np.linalg.norm(W2, ord=None, axis=None, keepdims=False) ** 2 
+    + reg * np.linalg.norm(H2, ord=None, axis=None, keepdims=False) ** 2)
+    '''
     print ('ALL: ')
     print (v)
-    
+    '''
     return v
 
 def function_sep(X1, W1, H1, X2, W2, H2, kc):
@@ -76,57 +81,72 @@ def function_sep(X1, W1, H1, X2, W2, H2, kc):
     H1t = np.transpose(H1)
     H2t = np.transpose(H2)
     
-    X1X2 = np.linalg.norm(X1 - np.dot(W1, H1t), ord=None, axis=None, keepdims=False) ** 2
-    + np.linalg.norm(X2 - np.dot(W2, H2t), ord=None, axis=None, keepdims=False) ** 2
+    X1 = np.linalg.norm(X1 - np.dot(W1, H1t), ord=None, axis=None, keepdims=False) ** 2
+    X2 = np.linalg.norm(X2 - np.dot(W2, H2t), ord=None, axis=None, keepdims=False) ** 2
     C = np.linalg.norm(W1c - W2c, ord=None, axis=None, keepdims=False) ** 2
     D = np.linalg.norm(np.dot(np.transpose(W1d), W2d) , ord=None, axis=None, keepdims=False) ** 2
     
-    return X1X2, C , D
-
-def function_X1X2(X1, W1, H1, X2, W2, H2, kc):
-    H1t = np.transpose(H1)
-    H2t = np.transpose(H2)
-    
-    X1X2 = np.linalg.norm(X1 - np.dot(W1, H1t), ord=None, axis=None, keepdims=False) ** 2
-    + np.linalg.norm(X2 - np.dot(W2, H2t), ord=None, axis=None, keepdims=False) ** 2
-    
-    print ('X1X2')
-    print (X1X2)
-    return X1X2
-    
-def function_C(X1, W1, H1, X2, W2, H2, kc):
-    W1c = W1[:,:kc]
-    W2c = W2[:,:kc]
-    
-    C = np.linalg.norm(W1c - W2c, ord=None, axis=None, keepdims=False) ** 2
-    
-    print ('C')
-    print (C)
-    return C
-
-def function_D(X1, W1, H1, X2, W2, H2, kc):
-    W1d = W1[:,kc:]
-    W2d = W2[:,kc:]
-        
-    D = np.linalg.norm(np.dot(np.transpose(W1d), W2d) , ord=None, axis=None, keepdims=False) ** 2
-    
-    print ('D')
-    print (D)
-    return D
-
-def function_R(X1, W1, H1, X2, W2, H2, kc):
     R = np.linalg.norm(W1, ord=None, axis=None, keepdims=False) ** 2 
     + np.linalg.norm(H1, ord=None, axis=None, keepdims=False) ** 2
     + np.linalg.norm(W2, ord=None, axis=None, keepdims=False) ** 2 
     + np.linalg.norm(H2, ord=None, axis=None, keepdims=False) ** 2
     
+    print X1
+    print X2
+    print C
+    print D
+    print R
+    
+    return X1, X2, C , D
+
+def function_X1X2(X1, W1, H1, X2, W2, H2, kc, alpha, beta, gama, reg):
+    H1t = np.transpose(H1)
+    H2t = np.transpose(H2)
+    
+    X1X2 = (gama *np.linalg.norm(X1 - np.dot(W1, H1t), ord=None, axis=None, keepdims=False) ** 2
+    + gama * np.linalg.norm(X2 - np.dot(W2, H2t), ord=None, axis=None, keepdims=False) ** 2)
+    '''
+    print ('X1X2')
+    print (X1X2)
+    '''
+    return X1X2
+    
+def function_C(X1, W1, H1, X2, W2, H2, kc, alpha, beta, gama, reg):
+    W1c = W1[:,:kc]
+    W2c = W2[:,:kc]
+    
+    C = alpha * np.linalg.norm(W1c - W2c, ord=None, axis=None, keepdims=False) ** 2
+    '''
+    print ('C')
+    print (C)
+    '''
+    return C
+
+def function_D(X1, W1, H1, X2, W2, H2, kc, alpha, beta, gama, reg):
+    W1d = W1[:,kc:]
+    W2d = W2[:,kc:]
+        
+    D = beta * np.linalg.norm(np.dot(np.transpose(W1d), W2d) , ord=None, axis=None, keepdims=False) ** 2
+    '''
+    print ('D')
+    print (D)
+    '''
+    return D
+
+def function_R(X1, W1, H1, X2, W2, H2, kc, alpha, beta, gama, reg):
+    R = (reg * np.linalg.norm(W1, ord=None, axis=None, keepdims=False) ** 2 
+    + reg * np.linalg.norm(H1, ord=None, axis=None, keepdims=False) ** 2
+    + reg * np.linalg.norm(W2, ord=None, axis=None, keepdims=False) ** 2 
+    + reg * np.linalg.norm(H2, ord=None, axis=None, keepdims=False) ** 2)
+    '''
     print ('R')
     print (R)
+    '''
     return R
     
-def grad_check_W1c(X1, W1, H1, X2, W2, H2, kc, grad):
+def grad_check_W1c(X1, W1, H1, X2, W2, H2, kc, grad, alpha, beta, gama, reg):
     
-    eps = math.pow(10, -3)
+    eps = math.pow(10, -4)
     W1temp = W1
     
     print ('W1c')
@@ -134,10 +154,10 @@ def grad_check_W1c(X1, W1, H1, X2, W2, H2, kc, grad):
     e = grad[1,1]
     
     W1temp[1,1] += eps
-    val1 = function(X1, W1temp, H1, X2, W2, H2, kc)
+    val1 = function(X1, W1temp, H1, X2, W2, H2, kc, alpha, beta, gama, reg)
     
     W1temp[1,1] -= 2 * eps
-    val2 = function(X1, W1temp, H1, X2, W2, H2, kc)
+    val2 = function(X1, W1temp, H1, X2, W2, H2, kc, alpha, beta, gama, reg)
     
     c = (val1 - val2)/(2 * eps)
     
@@ -145,9 +165,9 @@ def grad_check_W1c(X1, W1, H1, X2, W2, H2, kc, grad):
     
     return e,c
     
-def grad_check_W2c(X1, W1, H1, X2, W2, H2, kc, grad):
+def grad_check_W2c(X1, W1, H1, X2, W2, H2, kc, grad, alpha, beta, gama, reg):
     
-    eps = math.pow(10, -3)
+    eps = math.pow(10, -4)
     W2temp = W2
     
     print ('W2c')
@@ -155,18 +175,20 @@ def grad_check_W2c(X1, W1, H1, X2, W2, H2, kc, grad):
     e = grad[1,1]
     
     W2temp[1,1] += eps
-    val1 = function(X1, W1, H1, X2, W2temp, H2, kc)
+    val1 = function(X1, W1, H1, X2, W2temp, H2, kc, alpha, beta, gama, reg)
     
     W2temp[1,1] -= 2 * eps
-    val2 = function(X1, W1, H1, X2, W2temp, H2, kc)
+    val2 = function(X1, W1, H1, X2, W2temp, H2, kc, alpha, beta, gama, reg)
     
     c = (val1 - val2)/(2 * eps)
     
+    print c
+    
     return e,c
 
-def grad_check_W1d(X1, W1, H1, X2, W2, H2, kc, grad):
+def grad_check_W1d(X1, W1, H1, X2, W2, H2, kc, grad, alpha, beta, gama, reg):
     
-    eps = math.pow(10, -3)
+    eps = math.pow(10, -4)
     W1temp = W1
     
     print ('W1d')
@@ -174,18 +196,20 @@ def grad_check_W1d(X1, W1, H1, X2, W2, H2, kc, grad):
     e = grad[-1,-1]
     
     W1temp[-1,-1] += eps
-    val1 = function(X1, W1temp, H1, X2, W2, H2, kc)
+    val1 = function(X1, W1temp, H1, X2, W2, H2, kc, alpha, beta, gama, reg)
     
     W1temp[-1,-1] -= 2 * eps
-    val2 = function(X1, W1temp, H1, X2, W2, H2, kc)
+    val2 = function(X1, W1temp, H1, X2, W2, H2, kc, alpha, beta, gama, reg)
     
     c = (val1 - val2)/(2 * eps)
     
+    print c
+    
     return e,c
 
-def grad_check_W2d(X1, W1, H1, X2, W2, H2, kc, grad):
+def grad_check_W2d(X1, W1, H1, X2, W2, H2, kc, grad, alpha, beta, gama, reg):
     
-    eps = math.pow(10, -3)
+    eps = math.pow(10, -4)
     W2temp = W2
     
     print ('W2d')
@@ -193,12 +217,14 @@ def grad_check_W2d(X1, W1, H1, X2, W2, H2, kc, grad):
     e = grad[-1,-1]
     
     W2temp[-1,-1] += eps
-    val1 = function(X1, W1, H1, X2, W2temp, H2, kc)
+    val1 = function(X1, W1, H1, X2, W2temp, H2, kc, alpha, beta, gama, reg)
     
     W2temp[-1,-1] -= 2 * eps
-    val2 = function(X1, W1, H1, X2, W2temp, H2, kc)
+    val2 = function(X1, W1, H1, X2, W2temp, H2, kc, alpha, beta, gama, reg)
     
     c = (val1 - val2)/(2 * eps)
+    
+    print c
     
     return e,c
 
@@ -220,8 +246,7 @@ def gd_new_full(k, kc):
     print ('X2')
     print X2
     
-    epoc = 100
-    beta = 1.0
+    epoc = 1000
     
     m1,n1 = X1.shape
     m2,n2 = X2.shape
@@ -232,7 +257,7 @@ def gd_new_full(k, kc):
     W2 = np.random.rand(m2,k)
     H2 = np.random.rand(n2,k)
     
-    W1 = W2
+    #W1 = W2
     
     W1 = W1 / 10.0
     H1 = H1 / 10.0
@@ -255,12 +280,16 @@ def gd_new_full(k, kc):
     total_C = []
     total_D = []
     total_R = []
-    total_sep = []
     
-    alpha = 0.4
-    beta = 0.4
-    #gama = 1.0 - (alpha + beta)
-    gama = 0.2
+    #C
+    alpha = 0.2
+    #D
+    beta = 0.2
+    
+    #X1X2
+    gama = 1.0 - (alpha + beta)
+    #gama = 0.8
+    
     reg = 0.01
     '''
     W1cErr = []
@@ -287,42 +316,46 @@ def gd_new_full(k, kc):
         H2c = H2[:,:kc]
         H2d = H2[:,kc:]
         
-        W1t = np.transpose(W1)
+        #W1t = np.transpose(W1)
         H1t = np.transpose(H1)
         
-        W2t = np.transpose(W2)
+        #W2t = np.transpose(W2)
         H2t = np.transpose(H2)
         
-        W1ct = np.transpose(W1c)
+        #W1ct = np.transpose(W1c)
         W1dt = np.transpose(W1d)
         
-        W2ct = np.transpose(W2c)
-        W2dt = np.transpose(W2d)
+        #W2ct = np.transpose(W2c)
+        #W2dt = np.transpose(W2d)
         
-        H1ct = np.transpose(H1c)
-        H1dt = np.transpose(H1d)
+        #H1ct = np.transpose(H1c)
+        #H1dt = np.transpose(H1d)
         
-        H2ct = np.transpose(H2c)
-        H2dt = np.transpose(H2d)
+        #H2ct = np.transpose(H2c)
+        #H2dt = np.transpose(H2d)
                 
-        grad_w1c = 2 * gama * np.dot((np.dot(W1, H1t) - X1), H1c)
+        grad_w1c = (2 * gama * np.dot((np.dot(W1, H1t) - X1), H1c)
         + 2 * alpha * (W1c - W2c)
-        + 2 * reg * W1c
+        + 2 * reg * W1c)
+        
         W1cn = W1c - learning_rate * grad_w1c
         
-        grad_w2c = 2 * gama * np.dot((np.dot(W2, H2t) - X2), H2c)
+        grad_w2c = (2 * gama * np.dot((np.dot(W2, H2t) - X2), H2c)
         - 2 * alpha * (W1c - W2c)
-        + 2 * reg * W2c
+        + 2 * reg * W2c)
+        
         W2cn = W2c - learning_rate * grad_w2c        
         
-        grad_w1d = 2 * np.dot((np.dot(W1, H1t) - X1), H1d) 
+        grad_w1d = (2 * np.dot((np.dot(W1, H1t) - X1), H1d) 
         + 2 * beta * np.dot(W2d, np.dot(W1dt,W2d))
-        + 2 * reg * W1d        
+        + 2 * reg * W1d)
+        
         W1dn = W1d - learning_rate * grad_w1d
         
-        grad_w2d = 2 * np.dot((np.dot(W2, H2t) - X2), H2d) 
+        grad_w2d = (2 * np.dot((np.dot(W2, H2t) - X2), H2d) 
         + 2 * beta * np.dot(W1d, np.dot(W1dt,W2d))
-        + 2 * reg * W2d
+        + 2 * reg * W2d)
+        
         W2dn = W2d - learning_rate * grad_w2d
         
         #grad_h1 = 2 * np.dot(W1t, (np.dot(W1, H1t) - X1)) 
@@ -335,37 +368,25 @@ def gd_new_full(k, kc):
         grad_h2 = -2 * gama * np.dot(np.transpose(X2 - np.dot(W2, H2t)), W2) + 2 * reg * H2
         H2n = H2 - learning_rate * grad_h2
         
-        #(W1ce,W1cc) = grad_check_W1c(X1, W1, H1, X2, W2, H2, kc, grad_w1c)
-        #W1cErr.append(W1ce)
-        #W1cChk.append(W1cc)
-        
-        #(W2ce,W2cc) = grad_check_W2c(X1, W1, H1, X2, W2, H2, kc, grad_w2c)
-        #W2cErr.append(W2ce)
-        #W2cChk.append(W2cc)
-        
-        #(W1de,W1dc) = grad_check_W1d(X1, W1, H1, X2, W2, H2, kc, grad_w1d)
-        #W1dErr.append(W1de)
-        #W1dChk.append(W1dc)
-        
-        #(W2de,W2dc) = grad_check_W2d(X1, W1, H1, X2, W2, H2, kc, grad_w2d)
-        #W2dErr.append(W2de)
-        #W2dChk.append(W2dc)
-        
-        tot_err = function(X1, W1, H1, X2, W2, H2, kc)
+        tot_err = function(X1, W1, H1, X2, W2, H2, kc, alpha, beta, gama, reg)
         total_err.append(tot_err)
         
-        tot_X1X2 = function_X1X2(X1, W1, H1, X2, W2, H2, kc)
+        tot_X1X2 = function_X1X2(X1, W1, H1, X2, W2, H2, kc, alpha, beta, gama, reg)
         total_X1X2.append(tot_X1X2)
         
-        tot_C = function_C(X1, W1, H1, X2, W2, H2, kc)
+        tot_C = function_C(X1, W1, H1, X2, W2, H2, kc, alpha, beta, gama, reg)
         total_C.append(tot_C)
         
-        tot_D = function_D(X1, W1, H1, X2, W2, H2, kc)
+        tot_D = function_D(X1, W1, H1, X2, W2, H2, kc, alpha, beta, gama, reg)
         total_D.append(tot_D)
         
-        tot_R = function_R(X1, W1, H1, X2, W2, H2, kc)
+        tot_R = function_R(X1, W1, H1, X2, W2, H2, kc, alpha, beta, gama, reg)
         total_R.append(tot_R)
         
+        '''
+        function_sep(X1, W1, H1, X2, W2, H2, kc)
+        print ('*')*10
+        '''
         
         #sep_err = function_sep(X1, W1, H1, X2, W2, H2, kc)
         #total_sep.append(sep_err)
@@ -439,25 +460,65 @@ def gd_new_full(k, kc):
         if (e % 10 == 0):
             print e
     
-    pathk = path + str(k)
+    if (mode == 'write'):        
+        pathk = path + "k" + str(k)
+        if (os.path.isdir(pathk) == False):
+            os.mkdir(pathk)
+        
+        pathkc = pathk + "/c" + str(kc) + "d" + str(k-kc)    
+        if (os.path.isdir(pathkc) == False):
+            os.mkdir(pathkc)
+        
+        np.savetxt(pathkc + "/W1.csv", W1, delimiter=",")
+        np.savetxt(pathkc + "/W2.csv", W2, delimiter=",")
+        
+        np.savetxt(pathkc + "/W1c.csv", W1c, delimiter=",")
+        np.savetxt(pathkc + "/W2c.csv", W2c, delimiter=",")
+        np.savetxt(pathkc + "/W1d.csv", W1d, delimiter=",")
+        np.savetxt(pathkc + "/W2d.csv", W2d, delimiter=",")
+        
+        np.savetxt(pathkc + "/H1.csv", H1, delimiter=",")
+        np.savetxt(pathkc + "/H2.csv", H2, delimiter=",")
+        
+        np.savetxt(pathkc + "/H1c.csv", H1c, delimiter=",")
+        np.savetxt(pathkc + "/H2c.csv", H2c, delimiter=",")
+        np.savetxt(pathkc + "/H1d.csv", H1d, delimiter=",")
+        np.savetxt(pathkc + "/H2d.csv", H2d, delimiter=",")
+        
+        fw = open(pathkc + '/err.txt', "w")
+        
+        fw.write(str(errSqrX1[-1]) + "\n")
+        fw.write(str(errAbsX1[-1]) + "\n")
+        fw.write(str(errSqrX2[-1]) + "\n")
+        fw.write(str(errAbsX2[-1]) + "\n")
+        fw.write(str(errX1X2[-1]) + "\n")
+        fw.write(str(errAbsC[-1]) + "\n")
+        fw.write(str(errD[-1]))
+        
+        errorX1 = np.abs(X1 - np.dot(W1,np.transpose(H1)))
+        errorX2 = np.abs(X2 - np.dot(W2,np.transpose(H2)))
+        
+        np.savetxt(pathkc + "/ErrorX1.csv", errorX1, delimiter=",")
+        np.savetxt(pathkc + "/ErrorX2.csv", errorX2, delimiter=",")
+            
+        fw.close()
     
-    err1 = lossfuncAbs(X1, np.dot(W1, H1t))
-    fw1 = open(pathk + 'err1.txt', "w")
-    fw1.write(str(err1))
-    fw1.close()
+
     
-    err2 = lossfuncAbs(X2, np.dot(W2, H2t))
-    fw2 = open(pathk + 'err2.txt', "w")
-    fw2.write(str(err2))
-    fw2.close()
-    '''
-    fw1c = open(path + '')
-    
-    fw2c = open(path + '')
-    
-    fw1d = open(path + '')
-    
-    fw2d = open(path + '')
+    if (mode == 'write'):
+        
+        pathk = path + str(k)
+        
+        err1 = lossfuncAbs(X1, np.dot(W1, H1t))
+        fw1 = open(pathk + 'err1.txt', "w")
+        fw1.write(str(err1))
+        fw1.close()
+        
+        err2 = lossfuncAbs(X2, np.dot(W2, H2t))
+        fw2 = open(pathk + 'err2.txt', "w")
+        fw2.write(str(err2))
+        fw2.close()
+        
     '''
     W1c = W1[:,:kc]
     W1d = W1[:,kc:]
@@ -488,7 +549,8 @@ def gd_new_full(k, kc):
         
     np.savetxt(path + "/H1.csv", H1, delimiter=",")
     np.savetxt(path + "/H2.csv", H2, delimiter=",")
-        
+    '''    
+    
     plt.figure(1)
     plt.plot(index,errAbsX1)
     plt.title('Absolute Error X1')
@@ -525,7 +587,7 @@ def gd_new_full(k, kc):
     plt.xlabel('Iteration')
     
     plt.figure(8)
-    #plt.plot(index, total_err, label = 'Total')
+    plt.plot(index, total_err, label = 'Total')
     plt.plot(index, total_X1X2, label = 'X1X2')
     plt.plot(index, total_C, label = 'C')
     plt.plot(index, total_D, label = 'D')
@@ -540,7 +602,7 @@ def gd_new_full(k, kc):
 def read_error(k,n):
     index = []
     err = []
-    for i in range(1, k+1):
+    for i in range(2, k):
         index.append(i)
         f = open(path + str(i) + "err" + n + ".txt")
         lines = f.readlines()
@@ -550,39 +612,62 @@ def read_error(k,n):
     fig, ax = plt.subplots(figsize=(10, 5))
     
     plt.plot(index,err,color = 'r',ls='None',marker = '.')
-    plt.show    
-        
+    plt.show
+    '''    
     fw = open(path + "err" + n + ".txt", "w")
     for e in err:
         fw.write(str(e) + ",")
     fw.close
+    '''
+
+def read_error_avg(k):
+    index = []
+    err1 = []
+    err2 = []
+    err3 = []
+    for i in range(2, k+1):
+        index.append(i)
+        f1 = open(path + str(i) + "err1.txt")
+        print path + str(i) + "err1.txt"
+        lines = f1.readlines()
+        for l in lines:
+            err1.append(float(l))
+    for i in range(2, k+1):
+        f2 = open(path + str(i) + "err2.txt")
+        lines = f2.readlines()
+        for l in lines:
+            err2.append(float(l))
+     
+    print ('length')
+    print len(err1)
+    print len(err2)
+    for i in range(0, len(err1)):
+        print i
+        err3.append((err1[i] + err2[i])/2.0)
+    
+    print len(err3)
+    print len(index)
+    fig, ax = plt.subplots(figsize=(10, 5))
+    
+    plt.plot(index,err3,color = 'r',ls='None',marker = '.')
+    plt.show
 
 
 if __name__ == "__main__":
     
     
-    '''
-    print ('K = 2')
-    gd_new(2)
-    print ('K = 6')
-    gd_new(6)
-    print ('K = 10')
-    gd_new(10)
-    print ('K = 14')
-    gd_new(14)
-    print ('K = 18')
-    gd_new(18)
-    print ('K = 22')
-    gd_new(22)
-    print ('K = 26')
-    gd_new(26)
-    '''
-    '''
     k = 30
+    '''
     for i in range(1,k+1):
         print ('K = ' + str(i))
         gd_new_full(i)
-    read_error(k,"1")
-    read_error(k,"2")
     '''
-    gd_new_full(10,5)
+    #read_error(k,"1")
+    #read_error(k,"2")
+    #read_error_avg(k)
+    '''
+    for k in range(1,31):
+        for kc in range (1,k):
+            gd_new_full(k,kc)
+    '''
+    gd_new_full(11,9)

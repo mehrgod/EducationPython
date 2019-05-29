@@ -10,6 +10,12 @@ import math
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 
+def test_multiline():
+    x = (2
+         +3)
+    
+    print x
+
 def test_multiplot():
     X = [1,2,3]
     Y = [4,5,6]
@@ -277,4 +283,5 @@ if __name__ == "__main__":
     #test_add_element()
     #test_plot()
     #test_matrix()
-    test_multiplot()
+    #test_multiplot()
+    test_multiline()

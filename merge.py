@@ -14,24 +14,48 @@ import matplotlib.pyplot as plt
 import math
     
 
+def plot_err():
+    index = [1,2,3,4,5,6,7,8,9,10]
+    errX1X2 = [0.004451450313779434,0.004334864872754272,0.004424388894019901,0.004434751511609728,0.004374787297086295,0.004306767716273716,0.004263029506293,0.00451907891580362,0.004262061485957635,0.004324369733329577]
+    errC = [0.0037704143185466814,0.004309607397247974,0.003942931254609225,0.004880068446524691,0.0035027154870666795,0.00332567422698915,0.0035147815540130366,0.003419251877509466,0.003286636068537827,0.003158807224574146]
+    errD = [0.03809298320597188,0.03661334287445711,0.032561708283282906,0.034603884817708284,0.043424168777963526,0.046455482748096036,0.060513235253845325,0.03972313899469962,0.035354531406567635,0.004602924642988289]
+    
+    plt.figure(1)
+    plt.title('X1X2')
+    plt.plot(index, errX1X2)
+    plt.figure(2)
+    plt.title('C')
+    plt.plot(index, errC)
+    plt.figure(3)
+    plt.title('D')
+    plt.plot(index, errD)
+    plt.show()
+
 def plot_error_no_errorbar():
-    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/60402/"
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/"
     
     f1 = open(path + "Allplot.txt")
     line1 = f1.readlines()
     
     kkc1 = [token.strip() for token in line1[0].split('\t')]
-    mean1 = [float(token.strip()) for token in line1[1].split('\t')]
+    mean1 = [float(token.strip()) for token in line1[1].split(',')]
     
-    plt.rcParams.update({'font.size': 14})
-    plt.figure()
+    #print kkc1
+    #print mean1
+    
+    #print len(kkc1)
+    #print len(mean1)
+    
+    #plt.rcParams.update({'font.size': 14})
+    #plt.figure()
 
-    fig, ax = plt.subplots(figsize=(20, 10))
+    fig, ax = plt.subplots(figsize=(50, 10))
 
-    plt.errorbar(kkc1, mean1, 
+    plt.errorbar( kkc1, mean1
                  #linestyle='None', 
-                 marker='+', 
-                 linewidth=3.0)
+                 #marker='+', 
+                 #linewidth=3.0
+                 )
 
     plt.legend(('X1X2'))
 
@@ -233,7 +257,7 @@ def take_avg(value):
     fw12.close
     
 def take_avg_easy(value):
-    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/60402/"
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/"
     
     errorX1 = []
     errorX2 = []
@@ -287,7 +311,7 @@ def take_avg_agg():
     
     res = []
     
-    for k in range(2,21):
+    for k in range(2,31):
         fname = path + str(k) + "errX1X2.txt"
         print fname
         with open(fname) as f:
@@ -351,7 +375,7 @@ def take_avg_agg():
     '''
 
 def merge_errors(k):
-    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/60402/k" + str(k) + "/"
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/k" + str(k) + "/"
     errorsX1 = []
     errorsX2 = []
     errorsX1X2 = []
@@ -444,7 +468,7 @@ def test_centroid():
 def kmeans(clusters):
     
     path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/'
-    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040k10/'
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/k11/'
     
     ptrn = []
     with open(path + 'pattern.txt') as patterns:
@@ -455,7 +479,7 @@ def kmeans(clusters):
 
     #with open(path + 'vector.txt') as f:
     #    arrayV = [[float(digit) for digit in line.split('\t')] for line in f]
-    with open(path + 'W1W2.txt') as f:
+    with open(path + 'vector.txt') as f:
         arrayV = [[float(digit) for digit in line.split('\t')] for line in f]
     
     V = np.array(arrayV)
@@ -470,6 +494,7 @@ def kmeans(clusters):
     else:
         print ("Successfully created the directory %s " %new_path)
     '''
+    path = path + "Cluster/"
     fw = open(path + "Cluster" + str(clusters) +".txt", "w")
     fwc = open(path + str(clusters) +".txt", "w")
     
@@ -523,12 +548,30 @@ def match_id():
             fw.write(x + "\t" + vecdict[x] + "\n")
     
     fw.close
+ 
+def to_plot():
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/'
+    fw = open(path + 'Allplot.txt', 'w')
+    s = ''
+    for i in range(2,31):
+        for j in range(1,i):
+            s = s + str(i) + "," + str(j) + "\t"
+    fw.write(s + '\n')
+    s = ''
+    for i in range(2,31):
+        fname = path + 'k' + str(i) + 'errX1X2.txt'
+        with open(fname) as f:
+            for line in f:
+                s += line.strip()
+    fw.write(s)
+    fw.close()
+            
     
 if __name__ == "__main__":
     print ('Start:')
     #merge()
-    for i in range(2,6):
-        kmeans(i)
+    #for i in range(2,6):
+    #    kmeans(i)
     #test_centroid()
     #match_id()
     #take_avg()
@@ -543,9 +586,11 @@ if __name__ == "__main__":
     #for i in range(4, 21, 2):
     #    take_avg_c(str(i))
     #plot_error_c()
-    #for i in range(2,21):
+    #for i in range(2,31):
     #    merge_errors(i)
-        #take_avg_easy(i)
+    #    take_avg_easy(i)
     #take_avg_agg()
     #plot_error_no_errorbar()
+    #to_plot()
+    plot_err()
     print ('End')
