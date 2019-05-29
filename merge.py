@@ -32,7 +32,7 @@ def plot_all():
         
         plt.figure(1)
         plt.plot(index,X)
-        #fig.savefig(path + "C1" + performance + ".pdf")
+        plt.savefig(path + "C1" + str(k) + ".png")
         
         plt.figure(2)
         plt.plot(index,C)
@@ -93,30 +93,41 @@ def plot_err():
 def plot_error_no_errorbar():
     path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/"
     
-    f1 = open(path + "Allplot.txt")
-    line1 = f1.readlines()
+    f12 = open(path + "Allplot.txt")
+    line12 = f12.readlines()
     
-    kkc1 = [token.strip() for token in line1[0].split('\t')]
-    mean1 = [float(token.strip()) for token in line1[1].split(',')]
+    kkc12 = [token.strip() for token in line12[0].split('\t')]
+    val12 = [float(token.strip()) for token in line12[1].split(',')]
     
-    #print kkc1
-    #print mean1
+    fc = open(path + "AllplotC.txt")
+    lineC = fc.readlines()
     
-    #print len(kkc1)
-    #print len(mean1)
+    kkcC = [token.strip() for token in lineC[0].split('\t')]
+    valC = [float(token.strip()) for token in lineC[1].split(',')]
+    
+    fd = open(path + "AllplotD.txt")
+    lineD = fd.readlines()
+    
+    kkcD = [token.strip() for token in lineD[0].split('\t')]
+    valD = [float(token.strip()) for token in lineD[1].split(',')]
     
     #plt.rcParams.update({'font.size': 14})
     #plt.figure()
 
     fig, ax = plt.subplots(figsize=(50, 10))
 
-    plt.errorbar( kkc1, mean1
+    plt.errorbar( kkc12, val12
                  #linestyle='None', 
                  #marker='+', 
                  #linewidth=3.0
                  )
-
-    plt.legend(('X1X2'))
+    
+    plt.errorbar(kkcC, valC)
+    
+    plt.errorbar(kkcD, valD)
+    plt.legend(('X1X2','C','D'))
+    
+    plt.savefig(path + 'AllSave.png')
 
     plt.show()
 
@@ -321,6 +332,8 @@ def take_avg_easy(value):
     errorX1 = []
     errorX2 = []
     errorX1X2 = []
+    errorC = []
+    errorD = []
     
     #k
     #value = "4"
@@ -342,13 +355,21 @@ def take_avg_easy(value):
             with open(pathnn + "/errsX1X2.txt") as X1X2:
                 for line in X1X2:
                     errorX1X2.append(line)
-    
+            
+            with open(pathnn + "/errsC.txt") as X1X2:
+                for line in X1X2:
+                    errorC.append(line)
+            
+            with open(pathnn + "/errsD.txt") as X1X2:
+                for line in X1X2:
+                    errorD.append(line)            
     
     fw1 = open(path + 'k' + str(value) + 'errX1.txt', "w")
     fw2 = open(path + 'k' + str(value) + 'errX2.txt', "w")
     fw12 = open(path + 'k' + str(value) + 'errX1X2.txt', "w")
+    fwC = open(path + 'k' + str(value) + 'errC.txt', "w")
+    fwD = open(path + 'k' + str(value) + 'errD.txt', "w")
     
-    #fwx = open(path + 'k' + str(value) + 'errX1X2Full.txt', "w")
     
     for i in errorX1:
         fw1.write(i + "\n")
@@ -361,9 +382,21 @@ def take_avg_easy(value):
     for i in errorX1X2:
         fw12.write(i + "\n")
         print i + "\n"
-    fw1.close
-    fw2.close
-    fw12.close
+    
+    for i in errorC:
+        fwC.write(i + "\n")
+        print i + "\n"
+    
+    for i in errorD:
+        fwD.write(i + "\n")
+        print i + "\n"
+    
+    
+    fw1.close()
+    fw2.close()
+    fw12.close()
+    fwC.close()
+    fwD.close()
 
 def take_avg_agg():
     path = "C:/Project/EDU/files/2013/example/Topic/60/LG/60402/k"
@@ -438,6 +471,8 @@ def merge_errors(k):
     errorsX1 = []
     errorsX2 = []
     errorsX1X2 = []
+    errorsC = []
+    errorsD = []
     for x in os.listdir(path):
         if x.startswith("c"):
             print x
@@ -447,11 +482,9 @@ def merge_errors(k):
                 errorsX1.append(array2d[1])
                 errorsX2.append(array2d[3])
                 errorsX1X2.append(array2d[4])
-                #errors.append(float("{0:.8f}".format(array2d[4])))
+                errorsC.append(array2d[5])
+                errorsD.append(array2d[6])
             
-    #err = np.array(errors)
-    
-    #np.savetxt(path + "/errs.txt", err, delimiter=",")
     fw1 = open(path + "/errsX1.txt", "w")
     for e in errorsX1:
         fw1.write(e.strip()+",")
@@ -464,9 +497,19 @@ def merge_errors(k):
     for e in errorsX1X2:
         fw12.write(e.strip()+",")
     
+    fwc = open(path + "/errsC.txt", "w")
+    for e in errorsC:
+        fwc.write(e.strip()+",")
+    
+    fwd = open(path + "/errsD.txt", "w")
+    for e in errorsD:
+        fwd.write(e.strip()+",")
+    
     fw1.close()
     fw2.close()
     fw12.close()
+    fwc.close()
+    fwd.close()
 
 def find_error():
     path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040b/k10/c2d8/"
@@ -610,7 +653,7 @@ def match_id():
  
 def to_plot():
     path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/'
-    fw = open(path + 'Allplot.txt', 'w')
+    fw = open(path + 'AllplotD.txt', 'w')
     s = ''
     for i in range(2,31):
         for j in range(1,i):
@@ -618,7 +661,7 @@ def to_plot():
     fw.write(s + '\n')
     s = ''
     for i in range(2,31):
-        fname = path + 'k' + str(i) + 'errX1X2.txt'
+        fname = path + 'k' + str(i) + 'errD.txt'
         with open(fname) as f:
             for line in f:
                 s += line.strip()
@@ -649,9 +692,9 @@ if __name__ == "__main__":
     #    merge_errors(i)
     #    take_avg_easy(i)
     #take_avg_agg()
-    #plot_error_no_errorbar()
+    plot_error_no_errorbar()
     #to_plot()
     #plot_err()
     #merge_err()
-    plot_all()
+    #plot_all()
     print ('End')
