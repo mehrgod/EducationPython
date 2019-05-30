@@ -569,11 +569,11 @@ def test_centroid():
     
 def kmeans(clusters):
     
-    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/'
-    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/k11/'
+    pathp = 'C:/Project/EDU/files/2013/example/Topic/60/LG/'
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/k22/c4d18/'
     
     ptrn = []
-    with open(path + 'pattern.txt') as patterns:
+    with open(pathp + 'pattern.txt') as patterns:
         for p in patterns:
             ptrn.append(p.strip())
     
@@ -596,9 +596,13 @@ def kmeans(clusters):
     else:
         print ("Successfully created the directory %s " %new_path)
     '''
-    path = path + "Cluster/"
-    fw = open(path + "Cluster" + str(clusters) +".txt", "w")
-    fwc = open(path + str(clusters) +".txt", "w")
+    pathc = path + "Cluster/"
+    
+    if (os.path.isdir(pathc) == False):
+        os.mkdir(pathc)
+    
+    fw = open(pathc + "Cluster" + str(clusters) +".txt", "w")
+    fwc = open(pathc + str(clusters) +".txt", "w")
     
     for i in range (len(kmeans.labels_)):
         print ptrn[i], kmeans.labels_[i]
@@ -672,8 +676,8 @@ def to_plot():
 if __name__ == "__main__":
     print ('Start:')
     #merge()
-    #for i in range(2,6):
-    #    kmeans(i)
+    for i in range(2,6):
+        kmeans(i)
     #test_centroid()
     #match_id()
     #take_avg()
@@ -692,7 +696,7 @@ if __name__ == "__main__":
     #    merge_errors(i)
     #    take_avg_easy(i)
     #take_avg_agg()
-    plot_error_no_errorbar()
+    #plot_error_no_errorbar()
     #to_plot()
     #plot_err()
     #merge_err()
