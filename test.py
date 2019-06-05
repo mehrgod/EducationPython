@@ -9,6 +9,57 @@ import numpy as np
 import math
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
+import plotly.plotly as py
+import plotly.graph_objs as go
+#import seaborn as sns
+
+def test_seaborn():
+    #sns.set(style="darkgrid")
+    X = [1,2,3]
+    Y = [4,5,6]
+    XY = [X,Y]
+
+    df = sns.load_dataset("anscombe")
+
+# Show the results of a linear regression within each dataset
+    sns.lmplot(x="x", y="y", col="dataset", hue="dataset", data=df,
+           col_wrap=2, ci=None, palette="muted", height=4,
+           scatter_kws={"s": 50, "alpha": 1})
+
+def test_plotly():
+    
+    X = [1,2,3]
+    Y = [4,5,6]
+    
+    trace1 = go.Scatter(X=[1,2],Y=[1,2])
+    trace2 = go.Scatter(X=[1,2],Y=[2,1])
+    py.iplot([trace1, trace2])
+    
+    N = 500
+    
+    random_x = np.linspace(0, 1, N)
+    random_y = np.random.randn(N)
+    
+    # Create a trace
+    trace = go.Scatter(
+        x = random_x,
+        y = random_y
+    )
+    
+    data = [trace]
+    
+    py.iplot(data, filename='basic-line')
+
+    
+    random_x = np.linspace(0,1,10)
+    print random_x
+    random_y = np.random.randn(10)
+    print random_y
+    
+    trace = go.Scatter(X,Y)
+    data = [trace]
+    py.iplot(data)
+    
 
 def test_multiline():
     x = (2
@@ -283,5 +334,7 @@ if __name__ == "__main__":
     #test_add_element()
     #test_plot()
     #test_matrix()
-    #test_multiplot()
-    test_multiline()
+    test_multiplot()
+    #test_multiline()
+    #test_plotly()
+    #test_seaborn()

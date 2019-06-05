@@ -9,6 +9,7 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 import os
+import seaborn as sns
 
 mode = ''
 #mode = 'write'
@@ -246,7 +247,7 @@ def gd_new_full(k, kc):
     print ('X2')
     print X2
     
-    epoc = 1000
+    epoc = 100
     
     m1,n1 = X1.shape
     m2,n2 = X2.shape
@@ -383,6 +384,9 @@ def gd_new_full(k, kc):
         tot_R = function_R(X1, W1, H1, X2, W2, H2, kc, alpha, beta, gama, reg)
         total_R.append(tot_R)
         
+        grad_check_W1d(X1, W1, H1, X2, W2, H2, kc, grad_w1d, alpha, beta, gama, reg)
+        grad_check_W2d(X1, W1, H1, X2, W2, H2, kc, grad_w2d, alpha, beta, gama, reg)
+        
         '''
         function_sep(X1, W1, H1, X2, W2, H2, kc)
         print ('*')*10
@@ -502,10 +506,6 @@ def gd_new_full(k, kc):
         np.savetxt(pathkc + "/ErrorX2.csv", errorX2, delimiter=",")
             
         fw.close()
-    
-
-    
-    if (mode == 'write'):
         
         pathk = path + str(k)
         
@@ -582,11 +582,16 @@ def gd_new_full(k, kc):
     plt.xlabel('Iteration')
     
     plt.figure(7)
+    plt.plot(index,errD)
+    plt.title('Error D')
+    plt.xlabel('Iteration')
+    
+    plt.figure(8)
     plt.plot(index,total_err)
     plt.title('Total Objective Funcion Error')
     plt.xlabel('Iteration')
     
-    plt.figure(8)
+    plt.figure(9)
     plt.plot(index, total_err, label = 'Total')
     plt.plot(index, total_X1X2, label = 'X1X2')
     plt.plot(index, total_C, label = 'C')
@@ -670,4 +675,4 @@ if __name__ == "__main__":
         for kc in range (1,k):
             gd_new_full(k,kc)
     '''
-    gd_new_full(11,9)
+    gd_new_full(20,12)

@@ -12,6 +12,7 @@ from sklearn import metrics
 from sklearn.metrics import davies_bouldin_score
 import matplotlib.pyplot as plt
 import math
+import plotly.plotly as py
     
 def plot_all():
         path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/"
@@ -571,6 +572,7 @@ def kmeans(clusters):
     
     pathp = 'C:/Project/EDU/files/2013/example/Topic/60/LG/'
     path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/k22/c4d18/'
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/k11/c4d7/'
     
     ptrn = []
     with open(pathp + 'pattern.txt') as patterns:
@@ -581,7 +583,7 @@ def kmeans(clusters):
 
     #with open(path + 'vector.txt') as f:
     #    arrayV = [[float(digit) for digit in line.split('\t')] for line in f]
-    with open(path + 'vector.txt') as f:
+    with open(path + 'W1dW2d.txt') as f:
         arrayV = [[float(digit) for digit in line.split('\t')] for line in f]
     
     V = np.array(arrayV)
