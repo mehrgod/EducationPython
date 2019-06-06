@@ -8,11 +8,13 @@ Created on Mon Apr 22 18:18:15 2019
 import os
 import numpy as np
 from sklearn.cluster import KMeans 
-from sklearn import metrics
-from sklearn.metrics import davies_bouldin_score
+#from sklearn import metrics
+#from sklearn.metrics import davies_bouldin_score
 import matplotlib.pyplot as plt
 import math
-import plotly.plotly as py
+from sklearn.cluster import SpectralClustering
+from sklearn.cluster import AgglomerativeClustering
+
     
 def plot_all():
         path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/"
@@ -583,7 +585,7 @@ def kmeans(clusters):
 
     #with open(path + 'vector.txt') as f:
     #    arrayV = [[float(digit) for digit in line.split('\t')] for line in f]
-    with open(path + 'W1dW2d.txt') as f:
+    with open(path + 'W1dW2dT.txt') as f:
         arrayV = [[float(digit) for digit in line.split('\t')] for line in f]
     
     V = np.array(arrayV)
@@ -598,24 +600,35 @@ def kmeans(clusters):
     else:
         print ("Successfully created the directory %s " %new_path)
     '''
-    pathc = path + "Cluster/"
+    pathc = path + "ClusterT/"
     
     if (os.path.isdir(pathc) == False):
         os.mkdir(pathc)
     
     fw = open(pathc + "Cluster" + str(clusters) +".txt", "w")
     fwc = open(pathc + str(clusters) +".txt", "w")
+    fws = open(pathc + "Center" + str(clusters) + ".txt", "w")
     
     for i in range (len(kmeans.labels_)):
         print ptrn[i], kmeans.labels_[i]
         fw.write(ptrn[i] + "\t" + str(kmeans.labels_[i]) + "\n")
         fwc.write(str(kmeans.labels_[i]) + "\n")
-    '''
-    fw_cent = open(new_path + "/VectorCenter" + str(clusters) +".txt", "w")
+    
+    
+    #fw_cent = open(paths + str(clusters) +".txt", "w")
         
-    for c in kmeans.cluster_centers_:
-        fw_cent.write(str(c) + "\n")
-    '''    
+    for i in range (len(kmeans.cluster_centers_)):
+        center = ""
+        print (kmeans.cluster_centers_[i])
+        for j in range (len(kmeans.cluster_centers_[i])):
+            center = center + "," + str(kmeans.cluster_centers_[i][j])
+            #fws.write(str(kmeans.cluster_centers_[i][j]) + ",")
+        fws.write(center[1:] + "\n")
+        #fws.write("\n")
+        #fws.write("%s\n" %kmeans.cluster_centers_[i])
+        #fws.write(str(kmeans.cluster_centers_[i]) + "\n")
+        
+    
     '''
     fw_score = open(new_path + "/ClusteringScore" + str(clusters) +".txt", "w")
     
@@ -629,9 +642,77 @@ def kmeans(clusters):
     '''
     f.close()
     fw.close()
+    fwc.close()
+    fws.close()
     #fw_cent.close()
     #fw_score.close()
+
+def spectral(n):
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/k11/c4d7/'
     
+    with open(path + "W1dW2d.txt") as f:
+        array2d = [[float(digit) for digit in line.split('\t')] for line in f]
+
+    X = np.array(array2d)
+
+    #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040k10/'
+    ptrn = []
+    with open(path + 'pattern.txt') as patterns:
+        for p in patterns:
+            ptrn.append(p.strip())
+
+    clustering = SpectralClustering(n_clusters=n, assign_labels="discretize", random_state=0).fit(X)
+    
+    pathc = path + "Spectral/"
+    
+    if (os.path.isdir(pathc) == False):
+        os.mkdir(pathc)
+        
+    fw = open(pathc + "/Spectral" + str(n) + ".txt", "w")
+    fwc = open(pathc + str(n) + ".txt", "w")
+    
+    for l in range(len(clustering.labels_)):
+        fw.write(ptrn[l] + "\t" + str(clustering.labels_[l]) + "\n")
+        fwc.write(str(clustering.labels_[l]) + "\n")
+
+    fw.close()
+    fwc.close
+    f.close()
+    
+def hierarchical(n):
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/k11/c4d7/'
+    
+    with open(path + "W1dW2d.txt") as f:
+        array2d = [[float(digit) for digit in line.split('\t')] for line in f]
+
+    X = np.array(array2d)
+
+    #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040k10/'
+    ptrn = []
+    with open(path + 'pattern.txt') as patterns:
+        for p in patterns:
+            ptrn.append(p.strip())
+
+    clustering = AgglomerativeClustering(n_clusters=n, affinity='euclidean', linkage='ward').fit(X)
+    
+    print dir(clustering)
+    
+    pathc = path + "Hierarchical/"
+    
+    if (os.path.isdir(pathc) == False):
+        os.mkdir(pathc)
+        
+    fw = open(pathc + "/Hierarchical" + str(n) + ".txt", "w")
+    fwc = open(pathc + str(n) + ".txt", "w")
+    
+    for l in range(len(clustering.labels_)):
+        fw.write(ptrn[l] + "\t" + str(clustering.labels_[l]) + "\n")
+        fwc.write(str(clustering.labels_[l]) + "\n")
+
+    fw.close()
+    fwc.close
+    f.close()
+
 def match_id():
     path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/'
     
@@ -680,6 +761,8 @@ if __name__ == "__main__":
     #merge()
     for i in range(2,6):
         kmeans(i)
+    #    spectral(i)
+    #    hierarchical(i)
     #test_centroid()
     #match_id()
     #take_avg()
