@@ -14,10 +14,11 @@ import matplotlib.pyplot as plt
 import math
 from sklearn.cluster import SpectralClustering
 from sklearn.cluster import AgglomerativeClustering
+import csv
 
     
 def plot_all():
-        path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/"
+        path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040ab/"
         
         k = 30
         
@@ -35,7 +36,7 @@ def plot_all():
         
         plt.figure(1)
         plt.plot(index,X)
-        plt.savefig(path + "C1" + str(k) + ".png")
+        #plt.savefig(path + "C1" + str(k) + ".png")
         
         plt.figure(2)
         plt.plot(index,C)
@@ -94,14 +95,14 @@ def plot_err():
     plt.show()
 
 def plot_error_no_errorbar():
-    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/"
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040ab/"
     
-    f12 = open(path + "Allplot.txt")
+    f12 = open(path + "AllplotX1X2.txt")
     line12 = f12.readlines()
     
     kkc12 = [token.strip() for token in line12[0].split('\t')]
     val12 = [float(token.strip()) for token in line12[1].split(',')]
-    
+    '''
     fc = open(path + "AllplotC.txt")
     lineC = fc.readlines()
     
@@ -113,11 +114,11 @@ def plot_error_no_errorbar():
     
     kkcD = [token.strip() for token in lineD[0].split('\t')]
     valD = [float(token.strip()) for token in lineD[1].split(',')]
-    
+    '''
     #plt.rcParams.update({'font.size': 14})
     #plt.figure()
 
-    fig, ax = plt.subplots(figsize=(50, 10))
+    plt.subplots(figsize=(50, 10))
 
     plt.errorbar( kkc12, val12
                  #linestyle='None', 
@@ -125,12 +126,13 @@ def plot_error_no_errorbar():
                  #linewidth=3.0
                  )
     
-    plt.errorbar(kkcC, valC)
+    #plt.errorbar(kkcC, valC)
     
-    plt.errorbar(kkcD, valD)
-    plt.legend(('X1X2','C','D'))
+    #plt.errorbar(kkcD, valD)
+    #plt.legend(('X1X2','C','D'))
+    plt.legend(('X1X2'))
     
-    plt.savefig(path + 'AllSave.png')
+    plt.savefig(path + 'X1X2Save.png')
 
     plt.show()
 
@@ -330,7 +332,7 @@ def take_avg(value):
     fw12.close
     
 def take_avg_easy(value):
-    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/"
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040ab/"
     
     errorX1 = []
     errorX2 = []
@@ -470,7 +472,7 @@ def take_avg_agg():
     '''
 
 def merge_errors(k):
-    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/k" + str(k) + "/"
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040ab/k" + str(k) + "/"
     errorsX1 = []
     errorsX2 = []
     errorsX1X2 = []
@@ -648,16 +650,24 @@ def kmeans(clusters):
     #fw_score.close()
 
 def spectral(n):
-    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/k11/c4d7/'
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040ab/k11/c8d3/'
     
-    with open(path + "W1dW2d.txt") as f:
+    with open(path + 'W1cW2cW1dW2d.csv') as f:
+        array2d = list(csv.reader(f, quoting=csv.QUOTE_NONNUMERIC))
+        
+    X = np.array(array2d)
+    
+    '''
+    txt file
+    with open(path + "W1cW2cW1dW2d.txt") as f:
         array2d = [[float(digit) for digit in line.split('\t')] for line in f]
 
     X = np.array(array2d)
+    '''
 
     #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040k10/'
     ptrn = []
-    with open(path + 'pattern.txt') as patterns:
+    with open('C:/Project/EDU/files/2013/example/Topic/60/LG/6040ab/pattern.txt') as patterns:
         for p in patterns:
             ptrn.append(p.strip())
 
@@ -739,7 +749,7 @@ def match_id():
     fw.close
  
 def to_plot():
-    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/'
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040ab/'
     fw = open(path + 'AllplotD.txt', 'w')
     s = ''
     for i in range(2,31):
@@ -754,14 +764,45 @@ def to_plot():
                 s += line.strip()
     fw.write(s)
     fw.close()
-            
+    
+def concateWcWd():
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040ab/k11/c8d3/'
+    
+    with open(path + 'W1c.csv') as fw1c:
+        w1c = list(csv.reader(fw1c, quoting=csv.QUOTE_NONNUMERIC))
+    
+    with open(path + 'W2c.csv') as fw2c:
+        w2c = list(csv.reader(fw2c, quoting=csv.QUOTE_NONNUMERIC))
+    
+    with open(path + 'W1d.csv') as fw1d:
+        w1d = list(csv.reader(fw1d, quoting=csv.QUOTE_NONNUMERIC))
+        
+    with open(path + 'W2d.csv') as fw2d:
+        w2d = list(csv.reader(fw2d, quoting=csv.QUOTE_NONNUMERIC))
+        
+    w1cA = np.array(w1c)
+    w2cA = np.array(w2c)
+    w1dA = np.array(w1d)
+    w2dA = np.array(w2d)
+    
+    w12cA = (w1cA + w2cA) /2
+    
+    w = np.concatenate((w12cA, w1dA, w2dA), axis = 1)
+    
+    np.savetxt(path + "W1cW2cW1dW2d.csv", w, delimiter=",")
+    
+    fw1c.close()
+    fw2c.close()
+    fw1d.close()
+    fw2d.close()
+    
     
 if __name__ == "__main__":
     print ('Start:')
     #merge()
     for i in range(2,6):
-        kmeans(i)
-    #    spectral(i)
+    #    kmeans(i)
+        spectral(i)
     #    hierarchical(i)
     #test_centroid()
     #match_id()
@@ -777,13 +818,15 @@ if __name__ == "__main__":
     #for i in range(4, 21, 2):
     #    take_avg_c(str(i))
     #plot_error_c()
+    #take_avg_agg()
+    #plot_err()
+    #-------------------
     #for i in range(2,31):
     #    merge_errors(i)
     #    take_avg_easy(i)
-    #take_avg_agg()
     #plot_error_no_errorbar()
     #to_plot()
-    #plot_err()
     #merge_err()
     #plot_all()
+    #concateWcWd()
     print ('End')

@@ -9,12 +9,12 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 import os
-import seaborn as sns
+#import seaborn as sns
 
-mode = ''
-#mode = 'write'
+mode = 'test'
+mode = 'write'
 
-path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/'
+path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040ab/'
 
 def lossfuncSqr(X,Xn):
     m,n = X.shape
@@ -241,13 +241,13 @@ def gd_new_full(k, kc):
     
     X2 = np.array(array2dX2)
     
-    print ('X1')
-    print X1
+    #print ('X1')
+    #print X1
     
-    print ('X2')
-    print X2
+    #print ('X2')
+    #print X2
     
-    epoc = 100
+    epoc = 1000
     
     m1,n1 = X1.shape
     m2,n2 = X2.shape
@@ -283,9 +283,9 @@ def gd_new_full(k, kc):
     total_R = []
     
     #C
-    alpha = 0.2
+    alpha = 0.1
     #D
-    beta = 0.2
+    beta = 0.4
     
     #X1X2
     gama = 1.0 - (alpha + beta)
@@ -384,8 +384,8 @@ def gd_new_full(k, kc):
         tot_R = function_R(X1, W1, H1, X2, W2, H2, kc, alpha, beta, gama, reg)
         total_R.append(tot_R)
         
-        grad_check_W1d(X1, W1, H1, X2, W2, H2, kc, grad_w1d, alpha, beta, gama, reg)
-        grad_check_W2d(X1, W1, H1, X2, W2, H2, kc, grad_w2d, alpha, beta, gama, reg)
+        #grad_check_W1d(X1, W1, H1, X2, W2, H2, kc, grad_w1d, alpha, beta, gama, reg)
+        #grad_check_W2d(X1, W1, H1, X2, W2, H2, kc, grad_w2d, alpha, beta, gama, reg)
         
         '''
         function_sep(X1, W1, H1, X2, W2, H2, kc)
@@ -550,46 +550,65 @@ def gd_new_full(k, kc):
     np.savetxt(path + "/H1.csv", H1, delimiter=",")
     np.savetxt(path + "/H2.csv", H2, delimiter=",")
     '''    
+    pathk = path + "k" + str(k)
+    pathkc = pathk + "/c" + str(kc) + "d" + str(k-kc)
+    print pathkc
     
     plt.figure(1)
     plt.plot(index,errAbsX1)
     plt.title('Absolute Error X1')
     plt.xlabel('Iteration')
+    if mode == 'write':
+        plt.savefig(pathkc + "/AbsoluteErrorX1.png")        
     
     plt.figure(2)
     plt.plot(index,errSqrX1)
     plt.title('Square Error X1')
     plt.xlabel('Iteration')
+    if mode == 'write':
+        plt.savefig(pathkc + "/SquareErrorX1.png")
      
     plt.figure(3)
     plt.plot(index,errAbsX2)
     plt.title('Absolute Error X2')
     plt.xlabel('Iteration')
+    if mode == 'write':
+        plt.savefig(pathkc + "/AbsoluteErrorX2.png")
     
     plt.figure(4)
     plt.plot(index,errSqrX2)
     plt.title('Square Error X2')
     plt.xlabel('Iteration')
+    if mode == 'write':
+        plt.savefig(pathkc + "/SquareErrorX2.png")
      
     plt.figure(5)
     plt.plot(index,errAbsC)
     plt.title('Absolute Error C')
     plt.xlabel('Iteration')
+    if mode == 'write':
+        plt.savefig(pathkc + "/AbsoluteErrorC.png")
     
     plt.figure(6)
     plt.plot(index,errSqrC)
     plt.title('Square Error C')
     plt.xlabel('Iteration')
+    if mode == 'write':
+        plt.savefig(pathkc + "/SquareErrorC.png")
     
     plt.figure(7)
     plt.plot(index,errD)
     plt.title('Error D')
     plt.xlabel('Iteration')
+    if mode == 'write':
+        plt.savefig(pathkc + "/ErrorD.png")
     
     plt.figure(8)
     plt.plot(index,total_err)
     plt.title('Total Objective Funcion Error')
     plt.xlabel('Iteration')
+    if mode == 'write':
+        plt.savefig(pathkc + "/TotalObjectiveFuncionError.png")
     
     plt.figure(9)
     plt.plot(index, total_err, label = 'Total')
@@ -600,6 +619,8 @@ def gd_new_full(k, kc):
     plt.legend()
     plt.title('All Errors')
     plt.xlabel('Iteration')
+    if mode == 'write':
+        plt.savefig(pathkc + "/All Errors.png")
      
     plt.show()
 
@@ -670,9 +691,9 @@ if __name__ == "__main__":
     #read_error(k,"1")
     #read_error(k,"2")
     #read_error_avg(k)
-    '''
+    
     for k in range(1,31):
         for kc in range (1,k):
             gd_new_full(k,kc)
-    '''
-    gd_new_full(20,12)
+    
+    #gd_new_full(20,12)
