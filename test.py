@@ -11,20 +11,41 @@ from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 import plotly.plotly as py
 import plotly.graph_objs as go
+from sklearn.cross_decomposition import CCA
 #import seaborn as sns
+
+def test_cca():
+    X = [[0., 0., 1.], [1.,0.,0.], [2.,2.,2.], [3.,5.,4.]]
+    Y = [[0.1, -0.2], [0.9, 1.1], [6.2, 5.9], [11.9, 12.3]]
+    
+    cca = CCA(n_components = 2)
+    cca.fit(X, Y)
+    
+    CCA(copy=True, max_iter=500, n_components=2, scale=True, tol=1e-06)
+    
+    X_c, Y_c = cca.transform(X, Y)
+    
+    #cca.fit_transform(X, xcca)
+    
+    #print xcca
+    
+    print X_c
+    print Y_c
+    
 
 def test_seaborn():
     #sns.set(style="darkgrid")
-    X = [1,2,3]
-    Y = [4,5,6]
-    XY = [X,Y]
+    #X = [1,2,3]
+    #Y = [4,5,6]
 
-    df = sns.load_dataset("anscombe")
+    #df = sns.load_dataset("anscombe")
 
 # Show the results of a linear regression within each dataset
+    '''
     sns.lmplot(x="x", y="y", col="dataset", hue="dataset", data=df,
            col_wrap=2, ci=None, palette="muted", height=4,
            scatter_kws={"s": 50, "alpha": 1})
+    '''
 
 def test_plotly():
     
@@ -334,7 +355,8 @@ if __name__ == "__main__":
     #test_add_element()
     #test_plot()
     #test_matrix()
-    test_multiplot()
+    #test_multiplot()
     #test_multiline()
     #test_plotly()
     #test_seaborn()
+    test_cca()
