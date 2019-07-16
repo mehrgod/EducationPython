@@ -14,6 +14,27 @@ import plotly.graph_objs as go
 from sklearn.cross_decomposition import CCA
 #import seaborn as sns
 
+def test_list_to_str(l):
+    s = ''
+    for i in l:
+        s = s + ',' + str(i)
+    return s[1:]
+
+def test_take_avg_vec(l):
+    vecs = []
+    for line in l:
+        vec = [float(digit) for digit in line.split(',')]
+        #print vec
+        vecs.append(vec)
+        
+    return np.average(vecs, axis=0)
+
+def test_substr():
+    s = '123456'
+    
+    print s[:1]
+    print s[1:-1]
+
 def test_cca():
     X = [[0., 0., 1.], [1.,0.,0.], [2.,2.,2.], [3.,5.,4.]]
     Y = [[0.1, -0.2], [0.9, 1.1], [6.2, 5.9], [11.9, 12.3]]
@@ -359,4 +380,10 @@ if __name__ == "__main__":
     #test_multiline()
     #test_plotly()
     #test_seaborn()
-    test_cca()
+    #test_cca()
+    #test_substr()
+    l = []
+    l.append('1,2,3')
+    l.append('4,5,6')
+    print(test_take_avg_vec(l))
+    print(test_list_to_str(test_take_avg_vec(l)))

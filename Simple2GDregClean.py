@@ -14,7 +14,7 @@ import os
 mode = 'test'
 mode = 'write'
 
-path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040ab/'
+#path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10/1/'
 
 def lossfuncSqr(X,Xn):
     m,n = X.shape
@@ -229,7 +229,7 @@ def grad_check_W2d(X1, W1, H1, X2, W2, H2, kc, grad, alpha, beta, gama, reg):
     
     return e,c
 
-def gd_new_full(k, kc):
+def gd_new_full(k, kc, path):
     
     with open(path + 'l.txt') as file:
         array2dX1 = [[float(digit) for digit in line.split('\t')] for line in file]
@@ -283,9 +283,9 @@ def gd_new_full(k, kc):
     total_R = []
     
     #C
-    alpha = 0.1
+    alpha = 0.3
     #D
-    beta = 0.4
+    beta = 0.3
     
     #X1X2
     gama = 1.0 - (alpha + beta)
@@ -691,9 +691,15 @@ if __name__ == "__main__":
     #read_error(k,"1")
     #read_error(k,"2")
     #read_error_avg(k)
-    
-    for k in range(1,31):
-        for kc in range (1,k):
-            gd_new_full(k,kc)
-    
-    #gd_new_full(20,12)
+    '''
+    for itr in range (1,11):
+        path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10/'
+        path = path + str(itr) + '/'
+        for k in range(1, 31):
+            for kc in range (1, k):
+                gd_new_full(k, kc, path)
+    '''
+    for i in range(1,11):
+        path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040_228/a3b3/'
+        path = path + str(i) + '/'
+        gd_new_full(22,8,path)
