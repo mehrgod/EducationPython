@@ -101,7 +101,7 @@ def plot_error_no_errorbar():
     line12 = f12.readlines()
     
     kkc12 = [token.strip() for token in line12[0].split('\t')]
-    val12 = [float(token.strip()) for token in line12[1].split('\t')]
+    val12 = [float(token.strip()) for token in line12[1].split(',')]
     '''
     fc = open(path + "AllplotC.txt")
     lineC = fc.readlines()
@@ -135,6 +135,25 @@ def plot_error_no_errorbar():
     #plt.savefig(path + 'X1X2.png')
 
     plt.show()
+    
+def plot_ci():
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10/"
+    
+    f = open(path + "ci_99.txt")
+    
+    line = f.readlines()
+    
+    l = [token.strip() for token in line[0].split('\t')]
+    l1 = [float(token.strip()) for token in line[1].split(',')]
+    l2 = [float(token.strip()) for token in line[2].split(',')]
+    
+    plt.subplots(figsize=(50, 10))
+
+    plt.errorbar(l,l1)
+    plt.errorbar(l,l2)
+    
+    plt.show()
+    
 
 def plot_error_c():
     path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040n/"
@@ -472,7 +491,8 @@ def take_avg_agg():
     '''
 
 def merge_errors(k):
-    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10/10/k" + str(k) + "/"
+    #path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10/10/k" + str(k) + "/"
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040_184/1/k" + str(k) + "/"
     errorsX1 = []
     errorsX2 = []
     errorsX1X2 = []
@@ -650,9 +670,10 @@ def kmeans(clusters):
     #fw_score.close()
 
 def spectral(n):
-    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040ab/k11/c8d3/'
+    #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040ab/k11/c8d3/'
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040_199/1/k19/c9d10/'
     
-    with open(path + 'W1cW2cW1dW2d.csv') as f:
+    with open(path + 'W1cW2cW1dW2d_o.csv') as f:
         array2d = list(csv.reader(f, quoting=csv.QUOTE_NONNUMERIC))
         
     X = np.array(array2d)
@@ -750,7 +771,9 @@ def match_id():
  
 def to_plot():
     path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10/10/'
-    fw = open(path + 'AllplotX1X2.txt', 'w')
+    #fw = open(path + 'AllplotX1X2.txt', 'w')
+    #fw = open(path + 'AllplotC.txt', 'w')
+    fw = open(path + 'AllplotD.txt', 'w')
     s = ''
     for i in range(2,31):
         for j in range(1,i):
@@ -758,7 +781,9 @@ def to_plot():
     fw.write(s[0:-1] + '\n')
     s = ''
     for i in range(2,31):
-        fname = path + 'k' + str(i) + 'errX1X2.txt'
+        #fname = path + 'k' + str(i) + 'errX1X2.txt'
+        #fname = path + 'k' + str(i) + 'errC.txt'
+        fname = path + 'k' + str(i) + 'errD.txt'
         with open(fname) as f:
             for line in f:
                 s += line.strip()
@@ -767,7 +792,9 @@ def to_plot():
     
 def concateWcWd():
     #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040ab/k11/c8d3/'
-    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040_228/a4b1/1/k22/c8d14/'
+    #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040_228/a4b1/1/k22/c8d14/'
+    #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040_184/1/k18/c4d14/'
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040_199/1/k19/c9d10/'
     
     with open(path + 'W1c.csv') as fw1c:
         w1c = list(csv.reader(fw1c, quoting=csv.QUOTE_NONNUMERIC))
@@ -797,6 +824,43 @@ def concateWcWd():
     fw1d.close()
     fw2d.close()
     
+def ave_error_ci():
+    
+    vecs = []
+    
+    for i in range(1,11):
+        path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10/' + str(i) + '/'
+        print path
+        #with open(path + 'AllplotX1X2.txt') as f:
+        #with open(path + 'AllplotC.txt') as f:
+        with open(path + 'AllplotD.txt') as f:
+            data = f.readlines()
+            vecs.append(data[1])
+    
+    vecs_avg = take_avg_vec(vecs)
+    vecs_std = take_std_vec(vecs)
+    
+    l = len(vecs_avg)
+    
+    vecs_l = np.zeros(l)
+    vecs_h = np.zeros(l)
+    
+    for i in range(l):
+        vecs_l[i] = vecs_avg[i] - (1.96 * vecs_std[i])/np.sqrt(10)
+        vecs_h[i] = vecs_avg[i] + (1.96 * vecs_std[i])/np.sqrt(10)
+    
+    print vecs_l
+    print vecs_h
+    
+    fw1 = open('C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10/avg_d_std_95.txt','w')
+    fw1.write(list_to_str(vecs_avg) + '\n' + list_to_str(vecs_std))
+    
+    fw2 = open('C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10/ci_d_95.txt','w')
+    fw2.write(list_to_str(vecs_l) + '\n' + list_to_str(vecs_h))
+    
+    fw1.close()
+    fw2.close()
+
 def ave_error():
     
     vecs = []
@@ -810,8 +874,11 @@ def ave_error():
     
     vecs_avg = take_avg_vec(vecs)
     
-    return list_to_str(vecs_avg)
+    fw = open('C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10/avg.txt','w')
+    fw.write(list_to_str(vecs_avg))
     
+    fw.close()
+        
 def list_to_str(l):
     s = ''
     for i in l:
@@ -825,6 +892,14 @@ def take_avg_vec(l):
         vecs.append(vec)
         
     return np.average(vecs, axis=0)
+
+def take_std_vec(l):
+    vecs = []
+    for line in l:
+        vec = [float(digit) for digit in line.split(',')]
+        vecs.append(vec)
+        
+    return np.std(vecs, axis=0)
 
 def ave_error_k():
     vecs = []
@@ -859,9 +934,9 @@ def ave_error_k():
 if __name__ == "__main__":
     print ('Start:')
     #merge()
-    #for i in range(2,6):
+    for i in range(2,6):
     #    kmeans(i)
-        #spectral(i)
+        spectral(i)
     #    hierarchical(i)
     #test_centroid()
     #match_id()
@@ -880,14 +955,22 @@ if __name__ == "__main__":
     #take_avg_agg()
     #plot_err()
     #-------------------
-    #for i in range(2,31):
-    #    merge_errors(i)
-    #    take_avg_easy(i)
+    '''
+    for i in range(2,31):
+        merge_errors(i)
+        take_avg_easy(i)
+    '''
+    #merge_errors(18)
+    #take_avg_easy(18)
+    
     #to_plot()
     #plot_error_no_errorbar()
+    #plot_ci()
     #merge_err()
     #plot_all()
-    concateWcWd()
+    #concateWcWd()
     #print(ave_error())
+    #ave_error()
+    #ave_error_ci()
     #ave_error_k()
     print ('End')

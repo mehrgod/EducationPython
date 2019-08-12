@@ -231,12 +231,12 @@ def grad_check_W2d(X1, W1, H1, X2, W2, H2, kc, grad, alpha, beta, gama, reg):
 
 def gd_new_full(k, kc, path):
     
-    with open(path + 'l.txt') as file:
+    with open(path[0:-3] + 'l.txt') as file:
         array2dX1 = [[float(digit) for digit in line.split('\t')] for line in file]
     
     X1 = np.array(array2dX1)
     
-    with open(path + 'h.txt') as file:
+    with open(path[0:-3] + 'h.txt') as file:
         array2dX2 = [[float(digit) for digit in line.split('\t')] for line in file]
     
     X2 = np.array(array2dX2)
@@ -283,9 +283,9 @@ def gd_new_full(k, kc, path):
     total_R = []
     
     #C
-    alpha = 0.3
+    alpha = 0.4
     #D
-    beta = 0.3
+    beta = 0.1
     
     #X1X2
     gama = 1.0 - (alpha + beta)
@@ -465,6 +465,8 @@ def gd_new_full(k, kc, path):
             print e
     
     if (mode == 'write'):        
+        if (os.path.isdir(path) == False):
+            os.mkdir(path)
         pathk = path + "k" + str(k)
         if (os.path.isdir(pathk) == False):
             os.mkdir(pathk)
@@ -518,6 +520,16 @@ def gd_new_full(k, kc, path):
         fw2 = open(pathk + 'err2.txt', "w")
         fw2.write(str(err2))
         fw2.close()
+        
+        errc = lossfuncAbs(W1c, W2c)
+        fw3 = open(pathk + 'errc.txt', "w")
+        fw3.write(str(errc))
+        fw3.close()
+        
+        errd = lossfuncD(np.transpose(W1dn), W2dn)
+        fw4 = open(pathk + 'errd.txt', "w")
+        fw4.write(str(errd))
+        fw4.close()
         
     '''
     W1c = W1[:,:kc]
@@ -699,7 +711,7 @@ if __name__ == "__main__":
             for kc in range (1, k):
                 gd_new_full(k, kc, path)
     '''
-    for i in range(1,11):
-        path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040_228/a3b3/'
+    for i in range(10,11):
+        path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040_199/'
         path = path + str(i) + '/'
-        gd_new_full(22,8,path)
+        gd_new_full(19,9,path)

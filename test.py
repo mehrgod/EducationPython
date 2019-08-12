@@ -12,7 +12,16 @@ import matplotlib.pyplot as plt
 import plotly.plotly as py
 import plotly.graph_objs as go
 from sklearn.cross_decomposition import CCA
+from scipy import stats
 #import seaborn as sns
+
+def test_colum_center(X, m):
+    #return X - np.mean(X, axis=0).reshape((1, m))
+    return np.mean(X, axis=0).reshape((1, m))
+
+def test_avg_std():
+    a = [1,2,3]
+    print np.average(a)
 
 def test_list_to_str(l):
     s = ''
@@ -27,6 +36,8 @@ def test_take_avg_vec(l):
         #print vec
         vecs.append(vec)
         
+    print np.average(vecs, axis=0)
+    print np.std(vecs, axis=0)
     return np.average(vecs, axis=0)
 
 def test_substr():
@@ -382,8 +393,21 @@ if __name__ == "__main__":
     #test_seaborn()
     #test_cca()
     #test_substr()
+    '''
     l = []
     l.append('1,2,3')
     l.append('4,5,6')
-    print(test_take_avg_vec(l))
-    print(test_list_to_str(test_take_avg_vec(l)))
+    test_take_avg_vec(l)
+    '''
+    #print(test_take_avg_vec(l))
+    #print(test_list_to_str(test_take_avg_vec(l)))
+    
+    #test_avg_std()
+    
+    A = np.random.rand(6,6)
+    print A
+    print stats.zscore(A)
+    '''
+    print ('---')
+    print test_colum_center(A,6)
+    '''
