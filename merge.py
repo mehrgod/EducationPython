@@ -351,7 +351,8 @@ def take_avg(value):
     fw12.close
     
 def take_avg_easy(value):
-    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10/10/"
+    #path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10/10/"
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10-2/10/"
     
     errorX1 = []
     errorX2 = []
@@ -492,12 +493,26 @@ def take_avg_agg():
 
 def merge_errors(k):
     #path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10/10/k" + str(k) + "/"
-    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040_184/1/k" + str(k) + "/"
+    #path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040_184/1/k" + str(k) + "/"
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10-2/10/k" + str(k) + "/"
     errorsX1 = []
     errorsX2 = []
     errorsX1X2 = []
     errorsC = []
     errorsD = []
+    
+    for i in range(1,k):
+        x = 'c' + str(i) + 'd' + str(k-i)
+        pathn = path + x
+        with open(pathn + "/err.txt") as file:
+                array2d = [line for line in file]
+                errorsX1.append(array2d[1])
+                errorsX2.append(array2d[3])
+                errorsX1X2.append(array2d[4])
+                errorsC.append(array2d[5])
+                errorsD.append(array2d[6])
+            
+    '''
     for x in os.listdir(path):
         if x.startswith("c"):
             print x
@@ -509,7 +524,9 @@ def merge_errors(k):
                 errorsX1X2.append(array2d[4])
                 errorsC.append(array2d[5])
                 errorsD.append(array2d[6])
-            
+    '''
+    
+        
     fw1 = open(path + "/errsX1.txt", "w")
     for e in errorsX1:
         fw1.write(e.strip()+",")
@@ -671,9 +688,11 @@ def kmeans(clusters):
 
 def spectral(n):
     #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040ab/k11/c8d3/'
-    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040_199/1/k19/c9d10/'
+    #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040_199/1/k19/c9d10/'
+    #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10-2/3/k14/c8d6/'
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10-2/1/k15/c10d5/'
     
-    with open(path + 'W1cW2cW1dW2d_o.csv') as f:
+    with open(path + 'W1cW2cW1dW2d.csv') as f:
         array2d = list(csv.reader(f, quoting=csv.QUOTE_NONNUMERIC))
         
     X = np.array(array2d)
@@ -770,7 +789,7 @@ def match_id():
     fw.close
  
 def to_plot():
-    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10/10/'
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10-2/10/'
     #fw = open(path + 'AllplotX1X2.txt', 'w')
     #fw = open(path + 'AllplotC.txt', 'w')
     fw = open(path + 'AllplotD.txt', 'w')
@@ -794,7 +813,8 @@ def concateWcWd():
     #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040ab/k11/c8d3/'
     #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040_228/a4b1/1/k22/c8d14/'
     #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040_184/1/k18/c4d14/'
-    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040_199/1/k19/c9d10/'
+    #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040_199/1/k19/c9d10/'
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10-2/3/k14/c8d6/'
     
     with open(path + 'W1c.csv') as fw1c:
         w1c = list(csv.reader(fw1c, quoting=csv.QUOTE_NONNUMERIC))
@@ -829,7 +849,7 @@ def ave_error_ci():
     vecs = []
     
     for i in range(1,11):
-        path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10/' + str(i) + '/'
+        path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10-2/' + str(i) + '/'
         print path
         #with open(path + 'AllplotX1X2.txt') as f:
         #with open(path + 'AllplotC.txt') as f:
@@ -852,10 +872,10 @@ def ave_error_ci():
     print vecs_l
     print vecs_h
     
-    fw1 = open('C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10/avg_d_std_95.txt','w')
+    fw1 = open('C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10-2/avg_d_std_95.txt','w')
     fw1.write(list_to_str(vecs_avg) + '\n' + list_to_str(vecs_std))
     
-    fw2 = open('C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10/ci_d_95.txt','w')
+    fw2 = open('C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10-2/ci_d_95.txt','w')
     fw2.write(list_to_str(vecs_l) + '\n' + list_to_str(vecs_h))
     
     fw1.close()
@@ -934,7 +954,7 @@ def ave_error_k():
 if __name__ == "__main__":
     print ('Start:')
     #merge()
-    for i in range(2,6):
+    for i in range(6,7):
     #    kmeans(i)
         spectral(i)
     #    hierarchical(i)

@@ -9,11 +9,61 @@ import numpy as np
 import math
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
-import plotly.plotly as py
-import plotly.graph_objs as go
+#import plotly.plotly as py
+#import plotly.graph_objs as go
 from sklearn.cross_decomposition import CCA
-from scipy import stats
+#from scipy import stats
+import os
 #import seaborn as sns
+
+def test_row_matrix():
+    X = [[0., 0., 1.], [1.,0.,0.], [2.,2.,2.], [3.,5.,4.]]
+    #print X
+    
+    Y = np.array([
+        [5, 3, 0, 1],
+        [4, 0, 0, 1],
+        [1, 1, 0, 5],
+        [1, 0, 0, 4],
+        [0, 1, 5, 4],
+    ])
+    print Y[0]
+'''
+def test_take_avg_easy(value):
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10/10/"
+    
+    for k in os.listdir(path):
+        if k == "k" + str(value):
+            pathnn = path + k
+            print pathnn
+
+'''
+def test_loop(k):
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10/1/k" + str(k) + "/"
+    #path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040_184/1/k" + str(k) + "/"
+    errorsX1 = []
+    errorsX2 = []
+    errorsX1X2 = []
+    errorsC = []
+    errorsD = []
+    for i in range(1,k):
+        x = 'c' + str(i) + 'd' + str(k-i)
+        print path + x
+    
+    for x in os.listdir(path):
+        if x.startswith("c"):
+            #print x
+            pathn = path + x
+            print pathn
+            with open(pathn + "/err.txt") as file:
+                array2d = [line for line in file]
+                errorsX1.append(array2d[1])
+                errorsX2.append(array2d[3])
+                errorsX1X2.append(array2d[4])
+                errorsC.append(array2d[5])
+                errorsD.append(array2d[6])
+    
+
 
 def test_colum_center(X, m):
     #return X - np.mean(X, axis=0).reshape((1, m))
@@ -78,7 +128,7 @@ def test_seaborn():
            col_wrap=2, ci=None, palette="muted", height=4,
            scatter_kws={"s": 50, "alpha": 1})
     '''
-
+'''
 def test_plotly():
     
     X = [1,2,3]
@@ -113,7 +163,7 @@ def test_plotly():
     data = [trace]
     py.iplot(data)
     
-
+'''
 def test_multiline():
     x = (2
          +3)
@@ -372,42 +422,7 @@ def multiplying():
     print hc
     
 if __name__ == "__main__":
-    #test_sum()
-    #test_divide()
-    #test_csv()
-    #test_stack()
-    #test_sum_array()
-    #test_read_csv()
-    #make_rand()
-    #test_pow()
+    print('Start')
     #test_row()
-    #test_auto()
-    #test_nonzero()
-    #print test_forb()
-    #test_add_element()
-    #test_plot()
-    #test_matrix()
-    #test_multiplot()
-    #test_multiline()
-    #test_plotly()
-    #test_seaborn()
-    #test_cca()
-    #test_substr()
-    '''
-    l = []
-    l.append('1,2,3')
-    l.append('4,5,6')
-    test_take_avg_vec(l)
-    '''
-    #print(test_take_avg_vec(l))
-    #print(test_list_to_str(test_take_avg_vec(l)))
+    test_row_matrix()
     
-    #test_avg_std()
-    
-    A = np.random.rand(6,6)
-    print A
-    print stats.zscore(A)
-    '''
-    print ('---')
-    print test_colum_center(A,6)
-    '''
