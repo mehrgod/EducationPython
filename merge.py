@@ -692,10 +692,13 @@ def spectral(n):
     #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10-2/3/k14/c8d6/'
     path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10-2/1/k15/c10d5/'
     
-    with open(path + 'W1cW2cW1dW2d.csv') as f:
+    #with open(path + 'W1cW2cW1dW2d.csv') as f:
+    with open(path + 'H1H2.csv') as f:
         array2d = list(csv.reader(f, quoting=csv.QUOTE_NONNUMERIC))
         
     X = np.array(array2d)
+    
+    print (X.shape)
     
     '''
     txt file
@@ -705,7 +708,6 @@ def spectral(n):
     X = np.array(array2d)
     '''
 
-    #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040k10/'
     ptrn = []
     with open('C:/Project/EDU/files/2013/example/Topic/60/LG/6040ab/pattern.txt') as patterns:
         for p in patterns:
@@ -713,19 +715,19 @@ def spectral(n):
 
     clustering = SpectralClustering(n_clusters=n, assign_labels="discretize", random_state=0).fit(X)
     
-    pathc = path + "Spectral/"
+    pathc = path + "Spectral_H1H2/"
     
     if (os.path.isdir(pathc) == False):
         os.mkdir(pathc)
         
-    fw = open(pathc + "/Spectral" + str(n) + ".txt", "w")
+    #fw = open(pathc + "/Spectral" + str(n) + ".txt", "w")
     fwc = open(pathc + str(n) + ".txt", "w")
     
     for l in range(len(clustering.labels_)):
-        fw.write(ptrn[l] + "\t" + str(clustering.labels_[l]) + "\n")
+        #fw.write(ptrn[l] + "\t" + str(clustering.labels_[l]) + "\n")
         fwc.write(str(clustering.labels_[l]) + "\n")
 
-    fw.close()
+    #fw.close()
     fwc.close
     f.close()
     
@@ -954,7 +956,7 @@ def ave_error_k():
 if __name__ == "__main__":
     print ('Start:')
     #merge()
-    for i in range(6,7):
+    for i in range(2,5):
     #    kmeans(i)
         spectral(i)
     #    hierarchical(i)
