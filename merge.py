@@ -15,6 +15,7 @@ import math
 from sklearn.cluster import SpectralClustering
 from sklearn.cluster import AgglomerativeClustering
 import csv
+from sklearn import metrics
 
     
 def plot_all():
@@ -609,11 +610,12 @@ def test_centroid():
     centers = kmeans.cluster_centers_
     plt.scatter(centers[:, 0], centers[:, 1], c='black', s=200, alpha=0.5);
     
-def kmeans(clusters):
+def kmeans_old(clusters):
     
     pathp = 'C:/Project/EDU/files/2013/example/Topic/60/LG/'
-    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/k22/c4d18/'
-    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/k11/c4d7/'
+    #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/k22/c4d18/'
+    #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040fix/k11/c4d7/'
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10-2/1/k15/c10d5/'
     
     ptrn = []
     with open(pathp + 'pattern.txt') as patterns:
@@ -686,14 +688,56 @@ def kmeans(clusters):
     #fw_cent.close()
     #fw_score.close()
 
+def kmeans(n):
+    path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10-2/1/k15/c10d5/'
+    
+    #with open(path + 'W1cW2cW1dW2d.csv') as f:
+    with open(path + 'H1H2.csv') as f:
+        array2d = list(csv.reader(f, quoting=csv.QUOTE_NONNUMERIC))
+        
+    X = np.array(array2d)
+    
+    print (X.shape)
+    
+    ptrn = []
+    with open('C:/Project/EDU/files/2013/example/Topic/60/LG/6040ab/pattern.txt') as patterns:
+        for p in patterns:
+            ptrn.append(p.strip())
+
+    clustering = KMeans(n_clusters=n, random_state=0).fit(X)
+    
+    #pathc = path + "kmeans/"
+    pathc = path + "kmeans_H1H2/"
+    
+    if (os.path.isdir(pathc) == False):
+        os.mkdir(pathc)
+        
+    fw = open(pathc + "kmeans_" + str(n) + ".txt", "w")
+    #fwc = open(pathc + str(n) + ".txt", "w")
+    fwm = open(pathc + "silhouette_" + str(n) + ".txt", "w")
+    
+    labels = clustering.labels_
+    metric_score = metrics.silhouette_score(X, labels, metric = 'euclidean')
+    print metric_score
+    fwm.write(str(metric_score))
+        
+    for l in range(len(clustering.labels_)):
+        fw.write(ptrn[l] + "\t" + str(clustering.labels_[l]) + "\n")
+        #fwc.write(str(clustering.labels_[l]) + "\n")
+
+    fw.close()
+    #fwc.close()
+    fwm.close()
+    f.close()
+
 def spectral(n):
     #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040ab/k11/c8d3/'
     #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040_199/1/k19/c9d10/'
     #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10-2/3/k14/c8d6/'
     path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10-2/1/k15/c10d5/'
     
-    #with open(path + 'W1cW2cW1dW2d.csv') as f:
-    with open(path + 'H1H2.csv') as f:
+    with open(path + 'W1cW2cW1dW2d.csv') as f:
+    #with open(path + 'H1H2.csv') as f:
         array2d = list(csv.reader(f, quoting=csv.QUOTE_NONNUMERIC))
         
     X = np.array(array2d)
@@ -715,20 +759,27 @@ def spectral(n):
 
     clustering = SpectralClustering(n_clusters=n, assign_labels="discretize", random_state=0).fit(X)
     
-    pathc = path + "Spectral_H1H2/"
+    pathc = path + "Spectral/"
     
     if (os.path.isdir(pathc) == False):
         os.mkdir(pathc)
         
-    #fw = open(pathc + "/Spectral" + str(n) + ".txt", "w")
+    fw = open(pathc + "Spectral_" + str(n) + ".txt", "w")
     fwc = open(pathc + str(n) + ".txt", "w")
+    fwm = open(pathc + "silhouette_" + str(n) + ".txt", "w")
     
+    labels = clustering.labels_
+    metric_score = metrics.silhouette_score(X, labels, metric = 'euclidean')
+    print metric_score
+    fwm.write(str(metric_score))
+        
     for l in range(len(clustering.labels_)):
-        #fw.write(ptrn[l] + "\t" + str(clustering.labels_[l]) + "\n")
+        fw.write(ptrn[l] + "\t" + str(clustering.labels_[l]) + "\n")
         fwc.write(str(clustering.labels_[l]) + "\n")
 
-    #fw.close()
-    fwc.close
+    fw.close()
+    fwc.close()
+    fwm.close()
     f.close()
     
 def hierarchical(n):
@@ -956,9 +1007,10 @@ def ave_error_k():
 if __name__ == "__main__":
     print ('Start:')
     #merge()
-    for i in range(2,5):
-    #    kmeans(i)
-        spectral(i)
+    for i in range(2,3):
+        print i
+        kmeans(i)
+    #    spectral(i)
     #    hierarchical(i)
     #test_centroid()
     #match_id()
