@@ -9,10 +9,10 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 import os
-#import seaborn as sns
+import seaborn as sns
 
 mode = 'test'
-mode = 'write'
+#mode = 'write'
 
 #path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10/1/'
 
@@ -231,12 +231,12 @@ def grad_check_W2d(X1, W1, H1, X2, W2, H2, kc, grad, alpha, beta, gama, reg):
 
 def gd_new_full(k, kc, path):
     
-    with open(path[0:-3] + 'l.txt') as file:
+    with open(path[0:-13] + '/l.txt') as file:
         array2dX1 = [[float(digit) for digit in line.split('\t')] for line in file]
     
     X1 = np.array(array2dX1)
     
-    with open(path[0:-3] + 'h.txt') as file:
+    with open(path[0:-13] + '/h.txt') as file:
         array2dX2 = [[float(digit) for digit in line.split('\t')] for line in file]
     
     X2 = np.array(array2dX2)
@@ -247,7 +247,7 @@ def gd_new_full(k, kc, path):
     #print ('X2')
     #print X2
     
-    epoc = 1000
+    epoc = 500
     
     m1,n1 = X1.shape
     m2,n2 = X2.shape
@@ -464,6 +464,7 @@ def gd_new_full(k, kc, path):
         if (e % 10 == 0):
             print e
     
+    mode = 'test'
     if (mode == 'write'):        
         if (os.path.isdir(path) == False):
             os.mkdir(path)
@@ -566,6 +567,8 @@ def gd_new_full(k, kc, path):
     pathkc = pathk + "/c" + str(kc) + "d" + str(k-kc)
     print pathkc
     
+    mode = 'write'
+    '''
     plt.figure(1)
     plt.plot(index,errAbsX1)
     plt.title('Absolute Error X1')
@@ -574,11 +577,16 @@ def gd_new_full(k, kc, path):
         plt.savefig(pathkc + "/AbsoluteErrorX1.png")        
     
     plt.figure(2)
-    plt.plot(index,errSqrX1)
-    plt.title('Square Error X1')
+    #plt.figure(2, figsize=(8.0, 5.0))
+    plt.plot(index,errSqrX1,label = 'X1 Error')
+    #plt.title('Reconstruction Error')
     plt.xlabel('Iteration')
+    plt.ylabel('Reconstruction Error')
+    plt.tight_layout()
+    plt.legend()
     if mode == 'write':
-        plt.savefig(pathkc + "/SquareErrorX1.png")
+        print (pathkc)
+        plt.savefig(pathkc + "/SquareErrorX1label.png")
      
     plt.figure(3)
     plt.plot(index,errAbsX2)
@@ -588,39 +596,42 @@ def gd_new_full(k, kc, path):
         plt.savefig(pathkc + "/AbsoluteErrorX2.png")
     
     plt.figure(4)
-    plt.plot(index,errSqrX2)
-    plt.title('Square Error X2')
+    plt.plot(index,errSqrX2,label = 'X2 Error')
+    #plt.title('Reconstruction Error X2')
     plt.xlabel('Iteration')
+    plt.ylabel('Reconstruction Error')
+    plt.legend()
     if mode == 'write':
-        plt.savefig(pathkc + "/SquareErrorX2.png")
+        plt.savefig(pathkc + "/SquareErrorX2label.png")
+
      
     plt.figure(5)
     plt.plot(index,errAbsC)
     plt.title('Absolute Error C')
     plt.xlabel('Iteration')
     if mode == 'write':
-        plt.savefig(pathkc + "/AbsoluteErrorC.png")
+        plt.savefig(pathkc + "/AbsoluteErrorC2.pdf")
     
     plt.figure(6)
     plt.plot(index,errSqrC)
-    plt.title('Square Error C')
+    #plt.title('Square Error C')
     plt.xlabel('Iteration')
     if mode == 'write':
-        plt.savefig(pathkc + "/SquareErrorC.png")
+        plt.savefig(pathkc + "/SquareErrorC2.pdf")
     
     plt.figure(7)
     plt.plot(index,errD)
-    plt.title('Error D')
+    #plt.title('Error D')
     plt.xlabel('Iteration')
     if mode == 'write':
-        plt.savefig(pathkc + "/ErrorD.png")
+        plt.savefig(pathkc + "/ErrorD2.png")
     
     plt.figure(8)
     plt.plot(index,total_err)
     plt.title('Total Objective Funcion Error')
     plt.xlabel('Iteration')
     if mode == 'write':
-        plt.savefig(pathkc + "/TotalObjectiveFuncionError.png")
+        plt.savefig(pathkc + "/TotalObjectiveFuncionError2.png")
     
     plt.figure(9)
     plt.plot(index, total_err, label = 'Total')
@@ -632,8 +643,33 @@ def gd_new_full(k, kc, path):
     plt.title('All Errors')
     plt.xlabel('Iteration')
     if mode == 'write':
-        plt.savefig(pathkc + "/All Errors.png")
-     
+        plt.savefig(pathkc + "/All Errors2.png")
+    ''' 
+    
+    #fig = plt.figure()
+    matplotlib.rcParams['mathtext.fontset'] = 'stix'
+    matplotlib.rcParams['font.family'] = 'STIXGeneral'
+    #matplotlib.pyplot.title(r'ABC123 vs $\mathrm{ABC123}^{123}$')
+    plt.rcParams.update({'font.size': 24})
+    
+    
+    fig, ax = plt.subplots(nrows=2, ncols=1, figsize = (5,8))
+    fig.subplots_adjust(hspace = .3)
+    
+    #plt.figure(figsize = (10,15))
+    
+    ax[0].plot(index,errSqrX1,label = 'X1 Error')
+    ax[0].set_xlabel('Iteration')
+    ax[0].set_ylabel('Reconstruction Error')
+    ax[0].legend()
+    
+    ax[1].plot(index,errSqrX2,label = 'X2 Error')
+    ax[1].set_xlabel('Iteration')
+    ax[1].set_ylabel('Reconstruction Error')
+    ax[1].legend()
+    
+    plt.savefig(pathkc + "/X1X2V_large.pdf")
+    
     plt.show()
 
     
@@ -693,7 +729,7 @@ def read_error_avg(k):
 
 if __name__ == "__main__":
     
-    
+    sns.set()
     k = 30
     '''
     for i in range(1,k+1):
@@ -711,7 +747,8 @@ if __name__ == "__main__":
             for kc in range (1, k):
                 gd_new_full(k, kc, path)
     '''
-    for i in range(10,11):
+    for i in range(1,2):
         path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040_199/'
+        path = 'C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10-2/'
         path = path + str(i) + '/'
-        gd_new_full(19,9,path)
+        gd_new_full(15,10,path)

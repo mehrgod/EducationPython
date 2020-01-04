@@ -11,13 +11,122 @@ from sklearn.cluster import KMeans
 #from sklearn import metrics
 #from sklearn.metrics import davies_bouldin_score
 import matplotlib.pyplot as plt
+import matplotlib
 import math
 from sklearn.cluster import SpectralClustering
 from sklearn.cluster import AgglomerativeClustering
 import csv
 from sklearn import metrics
 
+import seaborn as sns
+
+def error_bar_cluster():
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10-2/1/k15/c10d5/"
+    with open(path + 'mean3.csv') as file:
+        array_mean = [[float(digit) for digit in line.split(',')] for line in file]
     
+    with open(path + 'ci3.csv') as file:
+        array_ci = [[float(digit) for digit in line.split(',')] for line in file]
+    
+   
+    x = ['W1c1','W1c2','W1c3','W1c4','W1c5','W1c6','W1c7','W1c8','W1c9','W1c10','W1d1','W1d2','W1d3','W1d4','W1d5','W2d1','W2d2','W2d3','W2d4','W2d5']
+    #x = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20']
+    
+    #matplotlib.rcdefaults()
+    #sns.set()
+    
+    plt.figure(figsize = (20,10))
+    
+    y5 = array_mean[0]
+    dy5 = array_ci[0]
+    
+    plt.errorbar(x, y5, yerr=dy5, capsize = 5, label='Cluster 5: \'_Sss\', \'_SS\', \'Sss\', \'SS_\', \'_Ss_\', ...', capthick=1, linewidth=2, elinewidth=1, linestyle = 'dotted');
+    
+    y4 = array_mean[1]
+    dy4 = array_ci[1]
+    
+    plt.errorbar(x, y4, yerr=dy4, capsize = 5, label='Cluster 4: \'_Fs\', \'Fs_\', \'_Fs\', \'Ff\', \'fs_\'', capthick=1, linewidth=2, elinewidth=1, linestyle = 'solid');
+    
+    y3 = array_mean[2]
+    dy3 = array_ci[2]
+    
+    plt.errorbar(x, y3, yerr=dy3, capsize = 5, label='Cluster 3: \'ee_\', \'_ee\', \'eee\', \'eee_\', ...', capthick=1, linewidth=2, elinewidth=1, linestyle = 'dashed');
+    
+    y2 = array_mean[3]
+    dy2 = array_ci[3]
+    
+    plt.errorbar(x, y2, yerr=dy2, capsize = 5, label='Cluster 2: \'sss\', \'ssss\', \'sss_\', ...', capthick=1, linewidth=2, elinewidth=1, linestyle = (0, (5, 10)));
+    y1 = array_mean[4]
+    dy1 = array_ci[4]
+    
+    plt.errorbar(x, y1, yerr=dy1, capsize = 5, label='Cluster 1: \'_FS\', \'FS_\', \'_FS_\', \'_FF\', \'_EE\'', capthick=1, linewidth=2, elinewidth=1, linestyle = (0, (1, 1)));
+    
+    y0 = array_mean[5]
+    dy0 = array_ci[5]
+    
+    plt.errorbar(x, y0, yerr=dy0, capsize = 5, label='Cluster 0: \'Ffs\', \'ffs\', \'fff\', \'FFS\', ...', capthick=1, linewidth=2, elinewidth=1, linestyle = (0, (1, 5)));
+    plt.grid()
+    plt.legend()
+    
+    matplotlib.rcParams['mathtext.fontset'] = 'stix'
+    matplotlib.rcParams['font.family'] = 'STIXGeneral'
+    #matplotlib.pyplot.title(r'ABC123 vs $\mathrm{ABC123}^{123}$')
+    plt.rcParams.update({'font.size': 24})
+    plt.savefig(path + 'cluster6-7.pdf')
+    
+    plt.show()
+
+def heatmap_ordered():
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10-2/1/k15/c10d5/"
+    with open(path + 'heatmap_20_4.txt') as file:
+        array2d = [[float(digit) for digit in line.split(',')] for line in file]
+        
+    X = np.array(array2d)
+    
+    '''
+    with open(path + 'label.txt') as file:
+        array_label = [line.split() for line in file]
+    
+    label = np.array(array_label)
+    print label
+    '''
+    #l = (",".join(map(str, array_label)))
+    
+    sns.set()
+    plt.figure(figsize = (10,15))
+    #plt.imshow(X, cmap='hot', interpolation='nearest')
+    #y_axix_labels = ['SS_','Ss_','_Ss','_FF','_Ss_','_FS','_SS','FS_','FFS','_Fs','_Fs_','Fs_','_FS_','_FFS','_Ff','ee_','FfS','_FSs','fS_','FSs','Sss','ss_','FSs_','_ss','_ss_','sS_','fSs','FFf','Sssss','Ssss','FFs','_FFs','_FFf','ssss_','Sss_','_Ffs_','_Sss','Ffs_','FSss','sss_','_ee','fss','fss_','eee_','Fff','_Ssss','sss','sfs','_ee_','_Sss_','Ssss_','_Ffs','ssss','_eee_','Fsss','_Fsss','fff','Ffs','ffs','ffs_','eeee','fssss','fsss','eee','_eee','_Fss','_Fss_','Fss','Fss_','_fs_','sssss_','_fs','_ff','_Fff','sssss','fs_']
+    y_axix_labels = ['_Sss','_SS','Sss','SS_','_Ss_','ss_','Ss_','_Ss',' ','_Fs','Fs_','_Fs_','_Ff','fs_',' ','ee_','_ee','eee','eee_','_ee_','_eee','eeee','_eee_',' ','sss','ssss','sssss','sss_','ssss_','Ssss',' ','_FS','FS_','_FS_','_FF','_EE',' ','Ffs','fff','_Ffs','ffs','FFS','Ffs_','fS_','Fss','Fff','_Ffs_','_Fss','fss','_FFS','FSs','_Fff','FFs','FfS','_FFs','ffs_','Fss_','_fs','_FSs','_Fss_','Sss_','FFf','FSs_','_ss','_ff','_FFf','_Sss_','_fs_','Sssss','sS_','_ss_','_Ssss','sfs','fss_','sssss_','fsss','Fsss','fSs','_Fsss','Ssss_','FSss','fssss']
+    #y_axix_labels = array_label
+    #y_axix_labels = label
+    #y_axix_labels = ll
+    sns.set(font_scale=1.1)
+    x_axix_labels = ['W1c','W1c','W1c','W1c','W1c','W1c','W1c','W1c','W1c','W1c','','W1d','W1d','W1d','W1d','W1d','','W2d','W2d','W2d','W2d','W2d']
+    cmap = sns.cm.rocket_r
+    sns_plot = sns.heatmap(X, yticklabels=y_axix_labels, xticklabels=x_axix_labels, cmap = cmap)
+    #sns_plot.figure.axes[0].set_ylabel(size = 20)
+    
+    #sns.set(font_scale=3)
+    
+    
+    #matplotlib.rcParams['mathtext.fontset'] = 'stix'
+    #matplotlib.rcParams['font.family'] = 'STIXGeneral'
+    #plt.rcParams.update({'font.size': 24})
+    
+    sns_plot.figure.savefig(path + "/heatmap_20_4.pdf")
+    plt.show()
+    
+
+def error_bar_paper():
+    plt.style.use('seaborn-whitegrid')
+    #sns.set()
+    x = [1, 2, 3]
+    y = [4, 5, 6]
+    dy =[0.5, 0.4, 0.2]
+    
+    plt.errorbar(x, y, yerr=dy, fmt='.k', markersize = 4, capsize = 5)
+    plt.errorbar(y, x, yerr=dy, fmt='.k', markersize = 8, capsize = 5)
+
 def plot_all():
         path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040ab/"
         
@@ -745,7 +854,7 @@ def spectral(n):
     print (X.shape)
     
     '''
-    txt file
+    #txt file
     with open(path + "W1cW2cW1dW2d.txt") as f:
         array2d = [[float(digit) for digit in line.split('\t')] for line in f]
 
@@ -1003,15 +1112,18 @@ def ave_error_k():
     
     fw.close()
 
+
     
 if __name__ == "__main__":
     print ('Start:')
     #merge()
-    for i in range(2,3):
-        print i
-        kmeans(i)
+    
+    #for i in range(2,3):
+    #    print i
+    #    kmeans(i)
     #    spectral(i)
     #    hierarchical(i)
+    
     #test_centroid()
     #match_id()
     #take_avg()
@@ -1029,11 +1141,11 @@ if __name__ == "__main__":
     #take_avg_agg()
     #plot_err()
     #-------------------
-    '''
-    for i in range(2,31):
-        merge_errors(i)
-        take_avg_easy(i)
-    '''
+    
+    #for i in range(2,31):
+    #    merge_errors(i)
+    #    take_avg_easy(i)
+    
     #merge_errors(18)
     #take_avg_easy(18)
     
@@ -1047,4 +1159,8 @@ if __name__ == "__main__":
     #ave_error()
     #ave_error_ci()
     #ave_error_k()
+    #error_bar_paper()
+    heatmap_ordered()
+    #error_bar_cluster()
     print ('End')
+    

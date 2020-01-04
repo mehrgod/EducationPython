@@ -9,12 +9,523 @@ import numpy as np
 import math
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
+from scipy.linalg import orth
+plt.style.use('seaborn-whitegrid')
 #import plotly.plotly as py
 #import plotly.graph_objs as go
 from sklearn.cross_decomposition import CCA
 #from scipy import stats
 import os
-#import seaborn as sns
+import seaborn as sns
+#from scipy import stats
+import random as rnd
+
+def test_subtract_array():
+    A = np.array([[ 1,   2,   3,   4,   5 ],
+                  [ 6,   7,   8,   9,   10],
+                  [ 11,  12,  13,  14,  15],
+                  [ 16,  17,  18,  19,  20],
+                  [ 21,  22,  23,  24,  25]])
+    
+    B = 25 - A
+    
+    print B
+    print np.amax(B)
+
+def test_multi_plot():
+    a = [1, 2, 3, 4, 5]
+    b = [10, 11, 12, 13, 14]
+    c = [0.1, 0.2 , 0.1, 0.2, 0.1]
+    
+    plt.errorbar(a, b, c, capsize = 5, label='test', capthick=1, linewidth=2, elinewidth=1, linestyle = 'dashed');
+    
+    plt.errorbar(b, a, yerr=c, capsize = 5, label='test', capthick=1, linewidth=2, elinewidth=1, linestyle = 'dotted');
+    
+    plt.show()
+    
+
+def test_sort():
+    a = []
+    
+    a.append(2)
+    a.append(4)
+    a.append(3)
+    
+    print a
+    
+    a.sort(reverse = True)
+    
+    print a
+    
+    a.sort()
+    
+    print a
+
+def test_jump_array():
+    
+    for i in range(1):
+        print i
+
+def test_minmax():
+    A = np.array([[ 1,   2,   3,   4,   5 ],
+                  [ 6,   7,   8,   9,   10],
+                  [ 11,  12,  13,  14,  15],
+                  [ 16,  17,  18,  19,  20],
+                  [ 21,  22,  23,  24,  25]])
+    
+    print np.amax(A)
+    print np.amin(A)
+
+def test_number():
+    a = [1, 2, 3]
+    print a[1]*2
+    
+    for i in np.arange(0,1,0.1):
+        print i
+
+def test_epoch():
+    
+    n = 5
+    
+    
+    eG = [[] for i in range(n)]
+    
+    print eG
+    '''
+    for i in range(n):
+        eG.append(i)
+    
+    print eG
+    
+    eG[0].append('0')
+    eG[2].append('2')
+    eG[1].append('1')
+    eG[2].append('22')
+    
+    
+    print eG
+    '''
+    for e in range(10):
+        
+        #learning_rate = 0.1/np.sqrt(e+1)
+        #index.append(e)
+        
+        for i in range(n):
+            eG[i].append(e)
+            '''
+            print 'e %s' %e
+            print 'i %s' %i
+            print eG[0]
+            print len(eG[i])
+            print '====='*4
+            '''
+            #print e, i
+            #print len(eG[i])
+    print eG[0]
+    print eG[1]
+            
+def test_normal_matrix():
+    lower = 0
+    upper = 0.2
+    
+    A = np.array([[ 1,   2,   3,   4,   5 ],
+                  [ 6,   7,   8,   9,   10],
+                  [ 11,  12,  13,  14,  15],
+                  [ 16,  17,  18,  19,  20],
+                  [ 21,  22,  23,  24,  25]])
+    
+    #A = np.array(arr)
+    
+    m, n = A.shape
+    
+    print m, n
+    
+    l = np.ndarray.flatten(A)
+    
+    minl = float(np.amin(l))
+    maxl = float(np.amax(l))
+    
+    print minl
+    print maxl
+    
+    print l
+    
+    l_norm = [ upper * (x - minl) / (maxl - minl) for x in l]
+    
+    print l_norm
+    
+    nA = np.reshape(l_norm, (m, n))
+    
+    print nA
+
+def test_list():
+    a = []
+    
+    b = []
+    c = []
+    
+    b.append('1')
+    b.append('2')
+    c.append('3')
+    c.append('4')
+    
+    a.append(b)
+    #b.append('5')
+    a.append(c)
+    
+    a[0].append('5')
+    a[1].append('6')
+    a[1].append('7')
+    
+    print b
+    print c
+    print a
+
+def test_array():
+    A = np.array([1, 2, 3])
+    print A[0]
+    
+    B = []
+    
+    B[0] = 1
+    
+    print B
+
+def test_orth():
+    m = 4
+    k = 3
+    G_temp = np.random.normal(0,1,[m,k])
+
+    G = orth(G_temp)
+    
+    print G_temp.shape
+    print G.shape
+
+def test_transpose():
+    A = np.array([[ 1,   2,   3,   4,   5 ],
+                  [ 6,   7,   8,   9,   10],
+                  [ 11,  12,  13,  14,  15],
+                  [ 16,  17,  18,  19,  20],
+                  [ 21,  22,  23,  24,  25]])
+    
+    print np.transpose(A)
+    print A.T
+
+def test_random_select():
+    n = 2
+    
+    A = np.array([[ 1,   2,   3,   4,   5 ],
+                  [ 6,   7,   8,   9,   10],
+                  [ 11,  12,  13,  14,  15],
+                  [ 16,  17,  18,  19,  20],
+                  [ 21,  22,  23,  24,  25]])
+    
+    test = []
+    index = [i for i in range(A.shape[1])]
+    
+    for i in range(0, A.shape[0]):
+        arr = rnd.sample(index, n)
+        print arr
+        for k in arr:
+            A[i, k] = 0
+            test.append((i, k))
+            
+    print A
+    print test
+    
+    
+def test_find_average():
+    path = 'C:/Project/EDU/files/2013/example/Topic/60'
+    all = []
+    with open(path + "/seq.txt") as file:
+        for line in file:
+            l = line.split()
+            all.append(len(l))
+    
+    s = 0
+    for a in all:
+        s = s + a
+        
+    print s
+    print len(all)
+    print float(s/len(all))
+
+def test_replace():
+    A = np.array([[ 1.,  1.,  1.,  1.,  1.],
+       [ 1.,  1.,  1.,  1.,  1.],
+       [ 1.,  1.,  1.,  1.,  1.],
+       [ 1.,  1.,  1.,  1.,  1.],
+       [ 1.,  1.,  1.,  1.,  1.]])
+    
+    B = np.array([[ 0.1,  0.2],
+       [ 0.3,  0.4]])
+    
+    A[2:4, 3:] = B
+    
+    print A
+
+def test_eigen():
+    A = np.array([
+        [1, -3, 3],
+        [3, -5, 3],
+        [6, -6, 4],])
+    
+    B = np.array([
+        [0, 1],
+        [-2, -3],])
+    
+    v, w = np.linalg.eig(A)
+    
+    k = 2
+    
+    [eigVal, G_new] = np.linalg.eig(A)
+    print eigVal
+    print G_new
+    idx = eigVal.argsort()[::-1]
+    eigVal = eigVal[idx]
+    G_new = G_new[:, idx]
+    G_new = G_new[:, 0:k]
+    G_new = np.real(G_new)
+    
+    
+    
+    print G_new
+
+def test_multicolumn():
+    '''
+    A = np.array([
+        [1, 2, 3],
+        [-1, 1, 2],
+        [-1, 0, -1],])
+    
+    B = np.array([
+        [1, 1, 0],
+        [0, 2, 0],
+        [-1, 3, 1],])
+    
+    
+    C = np.array([
+        [-1, 2, 1],
+        [1, -1, 2],
+        [-1, 0, 3],])
+    '''
+    A = np.array([
+        [1, 4],
+        [3, 2],])
+    
+    B = np.array([
+        [-1, 0],
+        [1, 1],])
+    
+    C = np.array([
+        [0, 2],
+        [1, -1],])
+    
+    
+    
+    print np.dot(A,B)
+    print np.dot(B,C)
+    
+    print np.dot(np.dot(A, B), C)
+    print np.dot(A, np.dot(B,C))
+
+
+def column_center(X, m):
+    avg = np.mean(X, axis=0)
+    
+    print 'original'
+    print X
+    
+    new_row = []
+    
+    for row in X:
+        new_row.append(row - avg)
+        
+    return np.vstack(new_row)
+    
+    #return np.mean(X, axis=0).reshape((1, m))
+
+def test_matrix_init():
+    
+    Wx = np.random.rand(10, 10)
+    Wy = np.random.rand(10, 10)
+    
+    print Wx
+    print ('*'*10)
+    print Wy
+
+def test_zero_mean():
+    A = np.array([
+        [1, 1, 0, 2],
+        [0, 2, 0, 3],
+        [-1, 3, 1, 4],])
+    
+    #B = stats.zscore(A)
+    
+    B = column_center(A,3)
+    print 'column_centered'
+    print B
+
+def first_1000():
+    c = 0
+    
+    path = "C:/Project/Dataset/kdd10/algebra_2005_2006"
+    
+    fw = open(path + "/algebra_2005_2006_train_1000.txt", "w")
+    
+    with open(path + "/algebra_2005_2006_train.txt") as file1:
+        for line in file1:
+            c = c + 1
+            if c < 1000:
+                fw.write(line)
+                
+    fw.close()
+    file1.close()
+
+
+def test_sub_matrix():
+    A = np.array([
+        [1, 2, 3, 4],
+        [5, 6, 7, 8],
+        [9, 10, 11, 12],
+        [13, 14, 15, 16],
+        ])
+    
+    #A[2:, 2:] = 0
+    
+    print A[2:, :1]
+        
+    print A
+    
+
+def test_mean_squared():
+    A = np.array([
+        [0, 0, 0],
+        [0, 0, 0],
+        [6, 0, 0],])
+    
+    B = np.array([
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0],])
+    
+    print np.sqrt(np.mean((A - B) ** 2))
+
+def test_subplot():
+    
+    x = range(10)
+    y = range(10)
+    
+    fig, (ax1,ax2) = plt.subplots(nrows=2, ncols=1)
+    '''
+    plt.plot(x,y)
+    plt.plot(y,x)
+    '''
+    
+    ax1.plot(x,y)
+    ax1.legend("1")
+    ax1.set_xlabel("x1")
+    ax1.set_ylabel("y1")
+    
+    ax2.plot(x,y)
+    ax2.legend("2")
+    ax2.set_xlabel("x1")
+    ax2.set_ylabel("y1")
+    
+    #plt.legend([ax1, ax2],["1", "2"])
+    '''
+    for row in ax:
+        for col in row:
+            col.plot(x, y)
+    '''        
+    plt.show()
+    
+
+def error_bar_test():
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10-2/1/k15/c10d5/"
+    with open(path + 'mean.csv') as file:
+        array_mean = [[float(digit) for digit in line.split(',')] for line in file]
+    
+    with open(path + 'ci.csv') as file:
+        array_ci = [[float(digit) for digit in line.split(',')] for line in file]
+    
+   
+    x = ['W1c1','W1c2','W1c3','W1c4','W1c5','W1c6','W1c7','W1c8','W1c9','W1c10','W1d1','W1d2','W1d3','W1d4','W1d5','W2d1','W2d2','W2d3','W2d4','W2d5']
+    #x = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20']
+    
+    sns.set()
+    
+    plt.figure(figsize = (20,10))
+    
+    y5 = array_mean[0]
+    dy5 = array_ci[0]
+    
+    #plt.errorbar(x, y5, yerr=dy5, fmt='o', capsize = 5, label='C5', uplims=True);
+    #capsize=5,capthick=2,ms=9,markerfacecolor='none'
+    plt.errorbar(x, y5, yerr=dy5, capsize = 5, label='C5', capthick=1, elinewidth=1);
+    #b[0].set_marker('_')
+    #b[0].set_markersize(20)
+    
+    y4 = array_mean[1]
+    dy4 = array_ci[1]
+    
+    plt.errorbar(x, y4, yerr=dy4, capsize = 5, label='C4', capthick=1, elinewidth=1);
+    
+    y3 = array_mean[2]
+    dy3 = array_ci[2]
+    
+    plt.errorbar(x, y3, yerr=dy3, capsize = 5, label='C3', capthick=1, elinewidth=1);
+    
+    y2 = array_mean[3]
+    dy2 = array_ci[3]
+    
+    plt.errorbar(x, y2, yerr=dy2, capsize = 5, label='C2', capthick=1, elinewidth=1);
+    y1 = array_mean[4]
+    dy1 = array_ci[4]
+    
+    plt.errorbar(x, y1, yerr=dy1, capsize = 5, label='C1', capthick=1, elinewidth=1);
+    
+    y0 = array_mean[5]
+    dy0 = array_ci[5]
+    
+    plt.errorbar(x, y0, yerr=dy0, capsize = 5, label='C0', capthick=1, elinewidth=1);
+    
+    
+    plt.legend()
+    
+    plt.savefig(path + 'cluster6.pdf')
+    
+    plt.show()
+    
+    
+    '''
+    x = np.linspace(0, 10, 50)
+    dy = 0.8
+    y = np.sin(x) + dy * np.random.randn(50)
+
+    (_, caps, _) = plt.errorbar(x, y, yerr=dy, fmt='o', capsize = 5);
+    for cap in caps:
+        cap.set_markeredgewidth(1)
+    '''
+
+
+def test_heatmap():
+    path = "C:/Project/EDU/files/2013/example/Topic/60/LG/6040i10-2/1/k15/c10d5/"
+    with open(path + 'heatmap.csv') as file:
+        array2d = [[float(digit) for digit in line.split(',')] for line in file]
+        
+    X = np.array(array2d)
+    print X.shape
+    
+    sns.set()
+    plt.figure(figsize = (10,15))
+    #plt.imshow(X, cmap='hot', interpolation='nearest')
+    y_axix_labels = ['SS_','Ss_','_Ss','_FF','_Ss_','_FS','_SS','FS_','FFS','_Fs','_Fs_','Fs_','_FS_','_FFS','_Ff','ee_','FfS','_FSs','fS_','FSs','Sss','ss_','FSs_','_ss','_ss_','sS_','fSs','FFf','Sssss','Ssss','FFs','_FFs','_FFf','ssss_','Sss_','_Ffs_','_Sss','Ffs_','FSss','sss_','_ee','fss','fss_','eee_','Fff','_Ssss','sss','sfs','_ee_','_Sss_','Ssss_','_Ffs','ssss','_eee_','Fsss','_Fsss','fff','Ffs','ffs','ffs_','eeee','fssss','fsss','eee','_eee','_Fss','_Fss_','Fss','Fss_','_fs_','sssss_','_fs','_ff','_Fff','sssss','fs_']
+    x_axix_labels = ['W1c','W1c','W1c','W1c','W1c','W1c','W1c','W1c','W1c','W1c','W1d','W1d','W1d','W1d','W1d','W2d','W2d','W2d','W2d','W2d']
+    sns_plot = sns.heatmap(X, yticklabels=y_axix_labels, xticklabels=x_axix_labels)
+    plt.show()
+    sns_plot.figure.savefig(path + "/heatmap.pdf")
+    #plt.savefig()
 
 def test_row_matrix():
     X = [[0., 0., 1.], [1.,0.,0.], [2.,2.,2.], [3.,5.,4.]]
@@ -421,8 +932,45 @@ def multiplying():
     hc = X[:2,:]
     print hc
     
+    
+def test_islower():
+    s = "AaBb"
+    print s.lower()
+
+def test_sub():
+    s = ",122334535gsf"
+    print s[1:]
+
 if __name__ == "__main__":
     print('Start')
     #test_row()
-    test_row_matrix()
+    #test_row_matrix()
+    #test_heatmap()
+    #error_bar_test()
+    #test_subplot()
+    #test_mean_squared()
+    #test_sub_matrix()
+    #first_1000()
+    #test_zero_mean()
+    #test_matrix_init()
+    #test_multicolumn()
+    #test_eigen()
+    #test_replace()
+    #test_find_average()
+    #test_random_select()
+    #test_transpose()
+    #test_islower()
+    #test_sub()
+    #test_orth()
+    #test_array()
+    #test_list()
+    #test_epoch()
+    #test_normal_matrix()
+    #test_number()
+    #test_minmax()
+    #test_jump_array()
+    #test_sort()
+    #test_multi_plot()
+    test_subtract_array()
     
+    print ('END')
